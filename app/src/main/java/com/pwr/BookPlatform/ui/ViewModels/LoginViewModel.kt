@@ -14,6 +14,7 @@ import retrofit2.HttpException
 
 class LoginViewModel(private val authService: AuthService) : ViewModel() {
 
+    var authenticated by mutableStateOf(false)
     var isPendingActivation by mutableStateOf(false)
     var user by mutableStateOf<AuthResponse?>(null)
     var errorMessage by mutableStateOf<String?>(null)
@@ -30,11 +31,13 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
                 .onSuccess { auth ->
                     user = auth
                     isPendingActivation = !auth.user.active
+                    authenticated = auth.user.active
                 }
                 .onFailure { error ->
                     if(error is HttpException && error.code() == 403) {
                         errorMessage = "Email not activated"
                         isPendingActivation = true
+                        authenticated = false
                     }
                     else {
                         errorMessage = error.message ?: "Login failed"
@@ -54,6 +57,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
                 .onSuccess { auth ->
                     user = auth
                     isPendingActivation = !auth.user.active
+                    authenticated = false
                 }
                 .onFailure { error ->
                     errorMessage = error.message ?: "Registration failed"
@@ -72,10 +76,18 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
                 .onSuccess { auth ->
                     user = auth
                     isPendingActivation = auth.user.active
+                    authenticated = auth.user.active
                 }
                 .onFailure { error ->
                     errorMessage = error.message ?: "Email not activated"
                 }
         }
+    }
+
+    fun logout() {
+        user = null
+        authenticated = false
+        isPendingActivation = false
+        errorMessage = null
     }
 }

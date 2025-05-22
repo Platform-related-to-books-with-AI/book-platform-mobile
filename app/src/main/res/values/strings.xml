@@ -23,4 +23,19 @@
     <string name="pending_activation_message">Please check your email to activate your account.</string>
     <string name="resend_activation_email">Resend email</string>
     <string name="check_activation_status">check activation status</string>
+
+    <!-- Strings for browser view -->
+    <string name="browser_back">Back</string>
+    <string name="browser_search">Search</string>
+    <string name="browser_search_books">Search Books</string>
+    <string name="browser_unknown_author">Unknown Author</string>
+    <string name="browser_first_published">First published: %1$d</string>
+
+    <!-- Sort options -->
+    <string name="sort_rating_desc">Rating ↓</string>
+    <string name="sort_rating_asc">Rating ↑</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_new">New</string>
+    <string name="sort_old">Old</string>
 </resources>
+

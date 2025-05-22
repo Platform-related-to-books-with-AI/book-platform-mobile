@@ -1,5 +1,6 @@
 package com.pwr.BookPlatform.ui.Views
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,12 +13,19 @@ import com.pwr.BookPlatform.R
 import com.pwr.BookPlatform.ui.ViewModels.LoginViewModel
 
 @Composable
-fun LoginView(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) {
+fun LoginView(
+    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel,
+    onNavigate: () -> Unit,
+) {
     var showLogin by remember { mutableStateOf(true) }
-    if (loginViewModel.isPendingActivation) {
-        PendingActivationView(modifier = modifier, loginViewModel)
-        return
+
+    LaunchedEffect(loginViewModel.isPendingActivation, loginViewModel.authenticated) {
+        if (loginViewModel.isPendingActivation || loginViewModel.authenticated) {
+            onNavigate()
+        }
     }
+
 
     Column(modifier = modifier.fillMaxSize()) {
         Text(
@@ -172,7 +180,22 @@ fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) 
 }
 
 @Composable
-fun PendingActivationView(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) {
+fun PendingActivationView(
+    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel,
+    onBack: () -> Boolean,
+    onNavigate: () -> Unit
+) {
+    BackHandler {
+        onBack()
+    }
+
+    LaunchedEffect(loginViewModel.authenticated) {
+        if (loginViewModel.authenticated) {
+            onNavigate()
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize(),
