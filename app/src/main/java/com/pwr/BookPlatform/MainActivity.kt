@@ -2,7 +2,6 @@ package com.pwr.BookPlatform
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,16 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.pwr.BookPlatform.Data.Services.AuthService
-import com.pwr.BookPlatform.Data.Services.BookService
-import com.pwr.BookPlatform.Data.api.RetrofitInstance
-import com.pwr.BookPlatform.ui.ViewModels.BookDetailsViewModel
-import com.pwr.BookPlatform.ui.ViewModels.BrowserViewModel
-import com.pwr.BookPlatform.ui.ViewModels.LoginViewModel
-import com.pwr.BookPlatform.ui.Views.BookDetailsView
-import com.pwr.BookPlatform.ui.Views.BrowserView
-import com.pwr.BookPlatform.ui.Views.LoginView
-import com.pwr.BookPlatform.ui.Views.PendingActivationView
+import com.pwr.BookPlatform.data.services.AuthService
+import com.pwr.BookPlatform.data.services.BookService
+import com.pwr.BookPlatform.data.api.RetrofitInstance
+import com.pwr.BookPlatform.ui.viewModels.BookDetailsViewModel
+import com.pwr.BookPlatform.ui.viewModels.BrowserViewModel
+import com.pwr.BookPlatform.ui.viewModels.LoginViewModel
+import com.pwr.BookPlatform.ui.views.BookDetailsView
+import com.pwr.BookPlatform.ui.views.BrowserView
+import com.pwr.BookPlatform.ui.views.LoginView
+import com.pwr.BookPlatform.ui.views.PendingActivationView
 import com.pwr.BookPlatform.ui.theme.MyApplicationTheme
 
 sealed class Screen(val route: String) {

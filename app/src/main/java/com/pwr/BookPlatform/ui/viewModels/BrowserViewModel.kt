@@ -1,12 +1,12 @@
-package com.pwr.BookPlatform.ui.ViewModels
+package com.pwr.BookPlatform.ui.viewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pwr.BookPlatform.Data.Models.BookDoc
-import com.pwr.BookPlatform.Data.Services.BookService
+import com.pwr.BookPlatform.data.models.BookDoc
+import com.pwr.BookPlatform.data.services.BookService
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 

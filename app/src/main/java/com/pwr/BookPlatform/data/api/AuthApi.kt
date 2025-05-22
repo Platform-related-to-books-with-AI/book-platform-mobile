@@ -1,8 +1,8 @@
-package com.pwr.BookPlatform.Data.api
+package com.pwr.BookPlatform.data.api
 
-import com.pwr.BookPlatform.Data.Models.AuthResponse
-import com.pwr.BookPlatform.Data.Models.LoginRequest
-import com.pwr.BookPlatform.Data.Models.RegisterRequest
+import com.pwr.BookPlatform.data.models.AuthResponse
+import com.pwr.BookPlatform.data.models.LoginRequest
+import com.pwr.BookPlatform.data.models.RegisterRequest
 
 import retrofit2.http.Body
 import retrofit2.http.GET

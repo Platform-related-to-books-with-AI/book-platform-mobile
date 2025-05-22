@@ -1,4 +1,4 @@
-package com.pwr.BookPlatform.ui.Views
+package com.pwr.BookPlatform.ui.views
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.pwr.BookPlatform.R
-import com.pwr.BookPlatform.ui.ViewModels.LoginViewModel
+import com.pwr.BookPlatform.ui.viewModels.LoginViewModel
 
 @Composable
 fun LoginView(

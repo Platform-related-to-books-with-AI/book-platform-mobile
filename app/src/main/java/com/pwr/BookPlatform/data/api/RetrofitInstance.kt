@@ -1,4 +1,4 @@
-package com.pwr.BookPlatform.Data.api
+package com.pwr.BookPlatform.data.api
 
 import com.pwr.BookPlatform.BuildConfig
 import retrofit2.Retrofit

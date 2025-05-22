@@ -37,5 +37,14 @@
     <string name="sort_title">Title</string>
     <string name="sort_new">New</string>
     <string name="sort_old">Old</string>
+
+    <!-- Strings for BookDetailsView -->
+    <string name="bookdetails_authors">Authors:</string>
+    <string name="bookdetails_subjects">Subjects:</string>
+    <string name="bookdetails_people">People:</string>
+    <string name="bookdetails_places">Places:</string>
+    <string name="bookdetails_times">Times:</string>
+    <string name="bookdetails_description">Description:</string>
+    <string name="bookdetails_no_title">No title</string>
 </resources>
 

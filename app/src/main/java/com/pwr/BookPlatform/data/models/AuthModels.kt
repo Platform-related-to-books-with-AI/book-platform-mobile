@@ -1,4 +1,4 @@
-package com.pwr.BookPlatform.Data.Models
+package com.pwr.BookPlatform.data.models
 
 data class AuthResponse(
     val user: UserResponse,

@@ -1,4 +1,4 @@
-package com.pwr.BookPlatform.Data.Models
+package com.pwr.BookPlatform.data.models
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

@@ -1,8 +1,10 @@
-package com.pwr.BookPlatform.Data.api
+package com.pwr.BookPlatform.data.api
 
-import com.pwr.BookPlatform.Data.Models.BookSearchResponse
+import com.pwr.BookPlatform.data.models.BookSearchResponse
+import com.pwr.BookPlatform.data.models.BookDetails
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface BookApi {
     @GET("books/")
@@ -12,4 +14,10 @@ interface BookApi {
         @Query("sort") sort: String? = null,
         @Query("page") page: Int = 1
     ): BookSearchResponse
+
+    @GET("books/works/{workKey}")
+    suspend fun getBookDetails(
+        @Path("workKey") workKey: String
+    ): BookDetails
 }
+

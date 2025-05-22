@@ -1,13 +1,9 @@
-package com.pwr.BookPlatform.Data.Services
+package com.pwr.BookPlatform.data.services
 
-import com.pwr.BookPlatform.Data.Models.AuthResponse
-import com.pwr.BookPlatform.Data.Models.LoginRequest
-import com.pwr.BookPlatform.Data.Models.RegisterRequest
-import com.pwr.BookPlatform.Data.api.AuthApi
-
-import okhttp3.ResponseBody
-import retrofit2.HttpException
-import org.json.JSONObject
+import com.pwr.BookPlatform.data.models.AuthResponse
+import com.pwr.BookPlatform.data.models.LoginRequest
+import com.pwr.BookPlatform.data.models.RegisterRequest
+import com.pwr.BookPlatform.data.api.AuthApi
 
 class AuthService(private val api: AuthApi) {
 
