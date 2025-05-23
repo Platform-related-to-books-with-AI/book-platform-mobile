@@ -1,11 +1,13 @@
 package com.pwr.BookPlatform.ui.views
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
@@ -14,6 +16,7 @@ import coil.compose.AsyncImage
 import com.pwr.BookPlatform.data.models.BookDetails
 import com.pwr.BookPlatform.R
 import com.pwr.BookPlatform.ui.viewModels.BookDetailsViewModel
+import com.gowtham.ratingbar.RatingBar
 
 @Composable
 fun BookDetailsView(
@@ -86,18 +89,28 @@ fun BookDetailsContent(book: BookDetails) {
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                if (!book.subjects.isNullOrEmpty()) {
-                    val subjectsToShow = book.subjects.take(10)
+                if (book.ratings_average != null && book.ratings_average > 0) {
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = stringResource(R.string.bookdetails_subjects),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = subjectsToShow.joinToString(),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(top = 4.dp)
+                    ) {
+                        RatingBar(
+                            value = book.ratings_average,
+                            onValueChange = {},
+                            onRatingChanged = {},
+                            modifier = Modifier.height(30.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = String.format(
+                                "%.1f",
+                                book.ratings_average
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         }
@@ -137,6 +150,19 @@ fun BookDetailsContent(book: BookDetails) {
             )
             Text(
                 text = timesToShow.joinToString(),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        if (!book.subjects.isNullOrEmpty()) {
+            val subjectsToShow = book.subjects.take(10)
+            Text(
+                text = stringResource(R.string.bookdetails_subjects),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = subjectsToShow.joinToString(),
                 style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(10.dp))

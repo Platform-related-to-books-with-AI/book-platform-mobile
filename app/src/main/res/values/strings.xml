@@ -46,5 +46,6 @@
     <string name="bookdetails_times">Times:</string>
     <string name="bookdetails_description">Description:</string>
     <string name="bookdetails_no_title">No title</string>
+    <string name="bookdetails_no_description">No description</string>
 </resources>
 

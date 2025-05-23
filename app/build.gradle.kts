@@ -69,6 +69,9 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    // Rating Bar
+    implementation("com.github.a914-gowtham:compose-ratingbar:1.2.3")
+
     // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

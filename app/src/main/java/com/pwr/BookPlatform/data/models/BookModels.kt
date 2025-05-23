@@ -12,7 +12,8 @@ data class BookDoc(
     val author_name: List<String>?,
     val first_publish_year: Int?,
     val edition_count: Int?,
-    val cover_i: Int?
+    val cover_i: Int?,
+    val ratings_average: Float?
 )
 
 data class BookDetails(
@@ -24,7 +25,8 @@ data class BookDetails(
     val subject_places: List<String>?,
     val subject_people: List<String>?,
     val subject_times: List<String>?,
-    val authors: List<AuthorSimple>?
+    val authors: List<AuthorSimple>?,
+    val ratings_average: Float?
 )
 
 data class AuthorSimple(

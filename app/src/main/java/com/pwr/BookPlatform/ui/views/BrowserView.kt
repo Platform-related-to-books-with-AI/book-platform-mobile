@@ -19,6 +19,8 @@ import com.pwr.BookPlatform.data.models.SortType
 import com.pwr.BookPlatform.data.models.getLabel
 import com.pwr.BookPlatform.ui.viewModels.BrowserViewModel
 import com.pwr.BookPlatform.R
+import com.gowtham.ratingbar.RatingBar
+import java.util.Locale
 
 @Composable
 fun BrowserView(
@@ -117,7 +119,6 @@ fun BrowserView(
     }
 }
 
-
 @Composable
 fun BookListItem(book: BookDoc) {
     Row(
@@ -146,6 +147,24 @@ fun BookListItem(book: BookDoc) {
                     text = stringResource(id = R.string.browser_first_published, year),
                     style = MaterialTheme.typography.bodySmall
                 )
+            }
+            book.ratings_average?.let { rating ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    RatingBar(
+                        value = rating,
+                        onValueChange = {},
+                        onRatingChanged = {},
+                        modifier = Modifier.height(20.dp),
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = String.format(Locale.getDefault(), "%.1f", rating),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }
