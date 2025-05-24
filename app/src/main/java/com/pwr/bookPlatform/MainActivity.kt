@@ -16,7 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import com.pwr.bookPlatform.data.services.AuthService
 import com.pwr.bookPlatform.data.services.BookService
 import com.pwr.bookPlatform.data.api.RetrofitInstance
-import com.pwr.bookPlatform.data.session.UserSession
 import com.pwr.bookPlatform.ui.viewModels.BookDetailsViewModel
 import com.pwr.bookPlatform.ui.viewModels.BrowserViewModel
 import com.pwr.bookPlatform.ui.viewModels.LoginViewModel
@@ -102,8 +101,12 @@ fun AppNavHost(
                     navController.navigate(Screen.Bookshelf.route)
                 },
                 onLogout = {
+                    loginViewModel.authenticated = false
+                    loginViewModel.user = null
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(0)
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
                     }
                 }
             )
@@ -139,6 +142,10 @@ fun AppNavHost(
                 bookshelfViewModel = bookshelfViewModel,
                 onBack = {
                     navController.popBackStack()
+                },
+                onNavigateToBookDetails = { bookId ->
+                    val encodedKey = Uri.encode(bookId)
+                    navController.navigate(Screen.BookDetails.createRoute(encodedKey))
                 }
             )
         }

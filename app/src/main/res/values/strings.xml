@@ -1,23 +1,36 @@
 <resources>
     <!-- General Application strings -->
     <string name="app_name">BookPlatform</string>
+    <string name="home_title">Book Platform</string>
+    <string name="error_user_not_logged_in">User is not logged in</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_server">Server error: %1$s</string>
+
+    <!-- Navigation -->
+    <string name="nav_back">Back</string>
+    <string name="nav_go_to_browse">Go to Browse</string>
+    <string name="nav_my_bookshelf">My Bookshelf</string>
+    <string name="nav_logout">Logout</string>
 
     <!-- Strings for login view -->
     <string name="login_welcome">Welcome to BookPlatform</string>
     <string name="login_switch_to_register">Register</string>
     <string name="login_switch_to_login">Login</string>
-
     <string name="login_title">Login</string>
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
     <string name="login_button">Login</string>
+    <string name="login_failed">Login failed</string>
+    <string name="login_email_not_activated">Email not activated</string>
 
+    <!-- Strings for register view -->
     <string name="register_title">Register</string>
     <string name="register_email">Email</string>
     <string name="register_username">Username</string>
     <string name="register_password">Password</string>
     <string name="register_confirm_password">Confirm Password</string>
     <string name="register_button">Register</string>
+    <string name="registration_failed">Registration failed</string>
 
     <string name="pending_activation_title">Pending Activation</string>
     <string name="pending_activation_message">Please check your email to activate your account.</string>
@@ -25,11 +38,13 @@
     <string name="check_activation_status">check activation status</string>
 
     <!-- Strings for browser view -->
+    <string name="browser_title">Browse</string>
     <string name="browser_back">Back</string>
     <string name="browser_search">Search</string>
     <string name="browser_search_books">Search Books</string>
     <string name="browser_unknown_author">Unknown Author</string>
     <string name="browser_first_published">First published: %1$d</string>
+    <string name="browser_sort">Sort</string>
 
     <!-- Sort options -->
     <string name="sort_rating_desc">Rating ↓</string>
@@ -39,6 +54,7 @@
     <string name="sort_old">Old</string>
 
     <!-- Strings for BookDetailsView -->
+    <string name="bookdetails_title">Book Details</string>
     <string name="bookdetails_authors">Authors:</string>
     <string name="bookdetails_subjects">Subjects:</string>
     <string name="bookdetails_people">People:</string>
@@ -47,6 +63,7 @@
     <string name="bookdetails_description">Description:</string>
     <string name="bookdetails_no_title">No title</string>
     <string name="bookdetails_no_description">No description</string>
+    <string name="bookdetails_no_cover">No cover</string>
 
     <!-- Add to Bookshelf dialog -->
     <string name="bookdetails_add_to_bookshelf_button">Add to Bookshelf</string>
@@ -57,6 +74,8 @@
     <string name="bookdetails_add">Add</string>
     <string name="bookdetails_success_message">Book has been added to your bookshelf!</string>
     <string name="bookdetails_error_message">Error: %1$s</string>
+    <string name="bookdetails_back">Back</string>
+    <string name="bookdetails_book_added">Book added to bookshelf</string>
 
     <!-- Strings for BookshelfView -->
     <string name="bookshelf_title">My Bookshelf</string>
@@ -66,6 +85,9 @@
     <string name="bookshelf_created_at">Created at: %1$s</string>
     <string name="bookshelf_delete">Delete review</string>
     <string name="bookshelf_no_reviews">No reviews to display</string>
-    <string name="bookshelf_try_again">Try again</string>
+    <string name="bookshelf_unknown_title">Unknown title</string>
+    <string name="bookshelf_unknown_author">Unknown author</string>
+    <string name="bookshelf_review_deleted">Review successfully deleted</string>
+    <string name="bookshelf_delete_error">Error deleting review: %1$s</string>
 </resources>
 

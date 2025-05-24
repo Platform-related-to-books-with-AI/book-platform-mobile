@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.pwr.bookPlatform.R
 import com.pwr.bookPlatform.ui.viewModels.LoginViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginView(
     modifier: Modifier = Modifier,
@@ -18,6 +19,7 @@ fun LoginView(
     onNavigate: () -> Unit,
 ) {
     var showLogin by remember { mutableStateOf(true) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(loginViewModel.authenticated) {
         if (loginViewModel.authenticated) {
@@ -25,41 +27,51 @@ fun LoginView(
         }
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(R.string.login_welcome),
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-        )
-
-        if (showLogin) {
-            LoginForm(modifier = Modifier.weight(1f), loginViewModel)
-        } else {
-            RegisterForm(modifier = Modifier.weight(1f), loginViewModel)
-        }
-
-        loginViewModel.errorMessage?.let { error ->
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
+    loginViewModel.snackbarMessage?.let { message ->
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
             )
+            loginViewModel.clearSnackbarMessage()
         }
+    }
 
-        TextButton(
-            onClick = { showLogin = !showLogin },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(stringResource(R.string.login_welcome))
+                }
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
         ) {
-            Text(
-                if (showLogin)
-                    stringResource(R.string.login_switch_to_register)
-                else
-                    stringResource(R.string.login_switch_to_login)
-            )
+            if (showLogin) {
+                LoginForm(modifier = Modifier.weight(1f), loginViewModel)
+            } else {
+                RegisterForm(modifier = Modifier.weight(1f), loginViewModel)
+            }
+
+            TextButton(
+                onClick = { showLogin = !showLogin },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    if (showLogin)
+                        stringResource(R.string.login_switch_to_register)
+                    else
+                        stringResource(R.string.login_switch_to_login)
+                )
+            }
         }
     }
 }
@@ -160,7 +172,7 @@ fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) 
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
+            label = { Text(stringResource(R.string.register_confirm_password)) },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation()
         )
@@ -176,3 +188,4 @@ fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) 
         }
     }
 }
+

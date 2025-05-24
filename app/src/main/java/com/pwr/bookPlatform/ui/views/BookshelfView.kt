@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -27,7 +28,8 @@ import com.pwr.bookPlatform.ui.viewModels.BookshelfViewModel
 fun BookshelfView(
     modifier: Modifier = Modifier,
     bookshelfViewModel: BookshelfViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onNavigateToBookDetails: (String) -> Unit
 ) {
     BackHandler {
         onBack()
@@ -35,6 +37,18 @@ fun BookshelfView(
 
     LaunchedEffect(Unit) {
         bookshelfViewModel.loadUserReviews()
+    }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    bookshelfViewModel.snackbarMessage?.let { message ->
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+            bookshelfViewModel.clearSnackbarMessage()
+        }
     }
 
     Scaffold(
@@ -50,34 +64,15 @@ fun BookshelfView(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Box(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (bookshelfViewModel.errorMessage != null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = bookshelfViewModel.errorMessage ?: "",
-                        color = Color.Red
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(onClick = { bookshelfViewModel.loadUserReviews() }) {
-                        Text(stringResource(R.string.bookshelf_try_again))
-                    }
-                }
-            }
-            else if (bookshelfViewModel.bookReviews.isEmpty()) {
+            if (bookshelfViewModel.bookReviews.isEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -90,8 +85,7 @@ fun BookshelfView(
                         fontSize = 18.sp
                     )
                 }
-            }
-            else {
+            } else {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -100,7 +94,10 @@ fun BookshelfView(
                     items(bookshelfViewModel.bookReviews) { bookReview ->
                         ReviewItem(
                             bookReview = bookReview,
-                            onDelete = { bookshelfViewModel.deleteReview(bookReview.review.id) }
+                            onDelete = { bookshelfViewModel.deleteReview(bookReview.review.id) },
+                            onItemClick = {
+                                onNavigateToBookDetails(bookReview.bookDetails?.key ?: "")
+                            }
                         )
 
                         Divider()
@@ -114,15 +111,16 @@ fun BookshelfView(
 @Composable
 fun ReviewItem(
     bookReview: BookReview,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onItemClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onItemClick() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Book cover
         Box(
             modifier = Modifier
                 .size(80.dp, 120.dp)
@@ -133,7 +131,7 @@ fun ReviewItem(
             if (coverId != null) {
                 AsyncImage(
                     model = "https://covers.openlibrary.org/b/id/$coverId-M.jpg",
-                    contentDescription = "Book cover",
+                    contentDescription = stringResource(R.string.bookdetails_no_cover),
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
@@ -144,7 +142,7 @@ fun ReviewItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No cover",
+                        text = stringResource(R.string.bookdetails_no_cover),
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -152,26 +150,23 @@ fun ReviewItem(
             }
         }
 
-        // Book and review info
         Column(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)
         ) {
-            // Book title
             Text(
-                text = bookReview.bookDetails?.title ?: "Unknown title",
+                text = bookReview.bookDetails?.title ?: stringResource(R.string.bookshelf_unknown_title),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
 
-            // Book authors
             bookReview.bookDetails?.authors?.let { authors ->
                 if (authors.isNotEmpty()) {
                     Text(
-                        text = authors.joinToString(", ") { it.author ?: "Unknown author" },
+                        text = authors.joinToString(", ") { it.author ?: "" },
                         fontSize = 14.sp,
                         color = Color.DarkGray,
                         maxLines = 1,
@@ -182,7 +177,6 @@ fun ReviewItem(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Review info
             Text(
                 text = stringResource(R.string.bookshelf_rating, bookReview.review.rating.toString()),
                 fontSize = 14.sp
@@ -200,7 +194,6 @@ fun ReviewItem(
             )
         }
 
-        // Delete button
         IconButton(
             onClick = onDelete,
             modifier = Modifier.padding(start = 8.dp)

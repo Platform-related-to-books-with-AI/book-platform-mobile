@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +23,7 @@ import com.gowtham.ratingbar.RatingBar
 import com.pwr.bookPlatform.R
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrowserView(
     modifier: Modifier = Modifier,
@@ -32,6 +34,7 @@ fun BrowserView(
     var query by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var selectedSort by remember { mutableStateOf(SortType.RATING_DESC) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         if (browserViewModel.books.isEmpty()) {
@@ -43,77 +46,95 @@ fun BrowserView(
         onBack()
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        if (!browserViewModel.errorMessage.isNullOrEmpty()) {
-            Text(
-                text = browserViewModel.errorMessage!!,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth()
+    browserViewModel.snackbarMessage?.let { message ->
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            browserViewModel.clearSnackbarMessage()
         }
+    }
 
-        OutlinedTextField(
-            value = query,
-            onValueChange = { query = it },
-            label = { Text(stringResource(id = R.string.browser_search_books)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(onClick = { browserViewModel.search(query, sort = selectedSort.sortValue) }) {
-                Text(stringResource(id = R.string.browser_search))
-            }
-            Box(
-                modifier = Modifier
-                    .wrapContentSize(Alignment.TopEnd)
-            ) {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Sortuj")
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    SortType.values().forEach { sortType ->
-                        DropdownMenuItem(
-                            text = { Text(sortType.getLabel()) },
-                            onClick = {
-                                selectedSort = sortType
-                                expanded = false
-                                browserViewModel.search(query, sort = sortType.sortValue)
-                            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.browser_title)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.browser_back)
                         )
                     }
                 }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
         ) {
-            items(browserViewModel.books) { book ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onNavigate(book) }
-                ) {
-                    BookListItem(book = book)
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                label = { Text(stringResource(R.string.browser_search_books)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = { browserViewModel.search(query, sort = selectedSort.sortValue) }) {
+                    Text(stringResource(R.string.browser_search))
                 }
-                HorizontalDivider()
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize(Alignment.TopEnd)
+                ) {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.browser_sort))
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        SortType.values().forEach { sortType ->
+                            DropdownMenuItem(
+                                text = { Text(sortType.getLabel()) },
+                                onClick = {
+                                    selectedSort = sortType
+                                    expanded = false
+                                    browserViewModel.search(query, sort = sortType.sortValue)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(browserViewModel.books) { book ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onNavigate(book) }
+                    ) {
+                        BookListItem(book = book)
+                    }
+                    HorizontalDivider()
+                }
             }
         }
     }
@@ -129,7 +150,7 @@ fun BookListItem(book: BookDoc) {
         if (book.cover_i != null) {
             AsyncImage(
                 model = "https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg",
-                contentDescription = null,
+                contentDescription = stringResource(R.string.bookdetails_no_cover),
                 modifier = Modifier.size(56.dp).padding(end = 8.dp)
             )
         }
@@ -139,12 +160,12 @@ fun BookListItem(book: BookDoc) {
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = book.author_name?.joinToString(", ") ?: stringResource(id = R.string.browser_unknown_author),
+                text = book.author_name?.joinToString(", ") ?: stringResource(R.string.browser_unknown_author),
                 style = MaterialTheme.typography.bodyMedium
             )
             book.first_publish_year?.let { year ->
                 Text(
-                    text = stringResource(id = R.string.browser_first_published, year),
+                    text = stringResource(R.string.browser_first_published, year),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

@@ -13,7 +13,7 @@ import retrofit2.HttpException
 class BrowserViewModel(private val bookService: BookService) : ViewModel() {
 
     var books by mutableStateOf<List<BookDoc>>(emptyList())
-    var errorMessage by mutableStateOf<String?>(null)
+    var snackbarMessage by mutableStateOf<String?>(null)
 
     fun search(
         query: String,
@@ -22,13 +22,13 @@ class BrowserViewModel(private val bookService: BookService) : ViewModel() {
         page: Int = 1
     ) {
         viewModelScope.launch {
-            errorMessage = null
+            snackbarMessage = null
             bookService.searchBooks(query, limit, sort, page).fold(
                 onSuccess = { response ->
                     books = response.docs
                 },
                 onFailure = { error ->
-                    errorMessage = when (error) {
+                    snackbarMessage = when (error) {
                         is HttpException -> "Server error: ${error.code()}"
                         else -> error.localizedMessage ?: "Unknown error"
                     }
@@ -36,5 +36,9 @@ class BrowserViewModel(private val bookService: BookService) : ViewModel() {
                 }
             )
         }
+    }
+
+    fun clearSnackbarMessage() {
+        snackbarMessage = null
     }
 }

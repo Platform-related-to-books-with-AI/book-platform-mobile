@@ -17,7 +17,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
 
     var authenticated by mutableStateOf(false)
     var user by mutableStateOf<AuthResponse?>(null)
-    var errorMessage by mutableStateOf<String?>(null)
+    var snackbarMessage by mutableStateOf<String?>(null)
 
     init {
         UserSession.getAuthToken()
@@ -48,7 +48,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            errorMessage = null
+            snackbarMessage = null
             authService.sendLoginRequest(
                 loginRequest = LoginRequest(email, password)
             ).fold(
@@ -59,10 +59,10 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
                 },
                 onFailure = { error ->
                     if(error is HttpException && error.code() == 403) {
-                        errorMessage = "Email not activated"
+                        snackbarMessage = "Email not activated"
                     }
                     else {
-                        errorMessage = error.message ?: "Login failed"
+                        snackbarMessage = error.message ?: "Login failed"
                     }
                 }
             )
@@ -71,7 +71,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
 
     fun register(email: String, username: String, password: String) {
         viewModelScope.launch {
-            errorMessage = null
+            snackbarMessage = null
             authService.sendRegisterRequest(
                 registerRequest = RegisterRequest(email, username, password)
             ).fold(
@@ -80,9 +80,13 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
                     login(email, password)
                 },
                 onFailure = { error ->
-                    errorMessage = error.message ?: "Registration failed"
+                    snackbarMessage = error.message ?: "Registration failed"
                 }
             )
         }
+    }
+
+    fun clearSnackbarMessage() {
+        snackbarMessage = null
     }
 }

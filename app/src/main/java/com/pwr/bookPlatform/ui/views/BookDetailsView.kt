@@ -1,16 +1,17 @@
 package com.pwr.bookPlatform.ui.views
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.pwr.bookPlatform.data.models.BookDetails
@@ -19,6 +20,7 @@ import com.gowtham.ratingbar.RatingBar
 import com.pwr.bookPlatform.R
 import com.pwr.bookPlatform.data.models.ReadingStatus
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailsView(
     modifier: Modifier = Modifier,
@@ -26,59 +28,79 @@ fun BookDetailsView(
     bookId: String,
     onBack: () -> Unit
 ) {
-    val context = LocalContext.current
     val bookDetails = bookDetailsViewModel.bookDetails
-    val errorMessage = bookDetailsViewModel.errorMessage
     var showAddToBookshelfDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     BackHandler {
         onBack()
     }
+
     LaunchedEffect(bookId) {
         val workKey = bookId.substringAfterLast('/')
         bookDetailsViewModel.loadBookDetails(workKey)
     }
 
-    LaunchedEffect(bookDetailsViewModel.addToBookshelfStatus) {
-        bookDetailsViewModel.addToBookshelfStatus?.let { status ->
-            Toast.makeText(context, status, Toast.LENGTH_LONG).show()
-            bookDetailsViewModel.addToBookshelfStatus = null
+    bookDetailsViewModel.snackbarMessage?.let { message ->
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+            bookDetailsViewModel.clearSnackbarMessage()
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        when {
-            errorMessage != null -> {
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = bookDetails?.title ?: stringResource(R.string.bookdetails_title),
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.bookdetails_back)
+                        )
+                    }
+                }
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            if (bookDetails != null) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    BookDetailsContent(
+                        book = bookDetails,
+                        onAddToBookshelfClick = { showAddToBookshelfDialog = true }
+                    )
+                }
             }
-            bookDetails != null -> {
-                BookDetailsContent(
-                    book = bookDetails,
-                    onAddToBookshelfClick = { showAddToBookshelfDialog = true }
+
+            if (showAddToBookshelfDialog && bookDetails != null) {
+                AddToBookshelfDialog(
+                    onDismiss = { showAddToBookshelfDialog = false },
+                    onConfirm = { rating, status ->
+                        val isbn = bookDetails.key?.substringAfterLast('/') ?: ""
+                        bookDetailsViewModel.addToBookshelf(isbn, rating, status)
+                        showAddToBookshelfDialog = false
+                    }
                 )
             }
         }
-    }
-
-    if (showAddToBookshelfDialog && bookDetails != null) {
-        AddToBookshelfDialog(
-            onDismiss = {
-                showAddToBookshelfDialog = false
-            },
-            onConfirm = { rating, status ->
-                val isbn = bookDetails.key?.substringAfterLast('/') ?: ""
-                bookDetailsViewModel.addToBookshelf(isbn, rating, status)
-            }
-        )
     }
 }
 
@@ -92,21 +114,14 @@ fun BookDetailsContent(
             if (!book.covers.isNullOrEmpty() && book.covers[0] > 0) {
                 AsyncImage(
                     model = "https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg",
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.bookdetails_no_cover),
                     modifier = Modifier
                         .height(140.dp)
                         .width(100.dp)
-                        .padding(end = 20.dp)
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = book.title ?: stringResource(R.string.bookdetails_no_title),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
                 if (!book.authors.isNullOrEmpty()) {
-                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = stringResource(R.string.bookdetails_authors),
                         style = MaterialTheme.typography.labelLarge,
@@ -121,7 +136,6 @@ fun BookDetailsContent(
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 4.dp)
                     ) {
                         RatingBar(
                             value = book.ratings_average,

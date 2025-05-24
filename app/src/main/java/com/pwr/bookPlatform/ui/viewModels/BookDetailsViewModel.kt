@@ -17,18 +17,16 @@ class BookDetailsViewModel(
     private val bookService: BookService
 ) : ViewModel() {
     var bookDetails by mutableStateOf<BookDetails?>(null)
-    var errorMessage by mutableStateOf<String?>(null)
-    var addToBookshelfStatus by mutableStateOf<String?>(null)
+    var snackbarMessage by mutableStateOf<String?>(null)
 
     fun loadBookDetails(workKey: String) {
         viewModelScope.launch {
-            errorMessage = null
             bookService.getBookDetails(workKey).fold(
                 onSuccess = { details ->
                     bookDetails = details
                 },
                 onFailure = { error ->
-                    errorMessage = when (error) {
+                    snackbarMessage = when (error) {
                         is HttpException -> "Server error: ${error.code()}"
                         else -> error.localizedMessage ?: "Unknown error"
                     }
@@ -38,7 +36,10 @@ class BookDetailsViewModel(
     }
 
     fun addToBookshelf(isbn: String, rating: Float, status: ReadingStatus) {
-        val userId = UserSession.user?.id ?: return
+        val userId = UserSession.user?.id ?: run {
+            snackbarMessage = "User is not logged in"
+            return
+        }
         viewModelScope.launch {
             val request = ReviewRequest(
                 isbn = isbn,
@@ -48,16 +49,20 @@ class BookDetailsViewModel(
             )
             bookService.createReview(request).fold(
                 onSuccess = {
-                    addToBookshelfStatus = "Book added to bookshelf"
+                    snackbarMessage = "Book added to bookshelf"
                 },
                 onFailure = { error ->
-                    addToBookshelfStatus = when (error) {
+                    snackbarMessage = when (error) {
                         is HttpException -> "Server error: ${error.code()}"
                         else -> error.localizedMessage ?: "Unknown error"
                     }
                 }
             )
         }
+    }
+
+    fun clearSnackbarMessage() {
+        snackbarMessage = null
     }
 }
 

@@ -16,7 +16,7 @@ class BookshelfViewModel(
 ) : ViewModel() {
 
     var bookReviews by mutableStateOf<List<BookReview>>(emptyList())
-    var errorMessage by mutableStateOf<String?>(null)
+    var snackbarMessage by mutableStateOf<String?>(null)
 
     init {
         loadUserReviews()
@@ -24,21 +24,19 @@ class BookshelfViewModel(
 
     fun loadUserReviews() {
         viewModelScope.launch {
-            errorMessage = null
-            bookReviews = emptyList()
+            snackbarMessage = null
 
             val userId = UserSession.user?.id ?: run {
-                errorMessage = "User is not logged in"
+                snackbarMessage = "User is not logged in"
                 return@launch
             }
 
             bookService.getUserBookReviews(userId).fold(
                 onSuccess = { reviews ->
                     bookReviews = reviews
-                    errorMessage = null
                 },
                 onFailure = { exception ->
-                    errorMessage = when (exception) {
+                    snackbarMessage = when (exception) {
                         is HttpException -> "Server error: ${exception.code()}"
                         else -> exception.localizedMessage ?: "Unknown error"
                     }
@@ -49,18 +47,25 @@ class BookshelfViewModel(
 
     fun deleteReview(reviewId: Long) {
         viewModelScope.launch {
+            snackbarMessage = null
+
             bookService.deleteReview(reviewId).fold(
                 onSuccess = {
-                    loadUserReviews()
+                    bookReviews = bookReviews.filter { it.review.id != reviewId }
+                    snackbarMessage = "Review successfully deleted"
                 },
                 onFailure = { exception ->
-                    errorMessage = when (exception) {
+                    snackbarMessage = when (exception) {
                         is HttpException -> "Error deleting review: ${exception.code()}"
                         else -> exception.localizedMessage ?: "Unknown error"
                     }
                 }
             )
         }
+    }
+
+    fun clearSnackbarMessage() {
+        snackbarMessage = null
     }
 }
 
