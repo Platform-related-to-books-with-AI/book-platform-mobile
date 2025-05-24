@@ -11,19 +11,19 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ReviewApi {
-    @GET("api/v1/reviews/user/{userId}")
+    @GET("reviews/user/{userId}")
     suspend fun getUserReviews(
         @Path("userId") userId: Long,
         @Query("page") page: Int = 0,
         @Query("perPage") perPage: Int = 10
     ): ReviewsResponse
 
-    @POST("api/v1/reviews/")
+    @POST("reviews/")
     suspend fun createReview(
         @Body reviewRequest: ReviewRequest
     ): ReviewResponse
 
-    @DELETE("api/v1/reviews/{id}")
+    @DELETE("reviews/{id}")
     suspend fun deleteReview(
         @Path("id") id: Long
     )

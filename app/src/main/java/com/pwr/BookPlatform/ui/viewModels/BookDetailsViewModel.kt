@@ -21,28 +21,32 @@ class BookDetailsViewModel(
 ) : ViewModel() {
     var bookDetails by mutableStateOf<BookDetails?>(null)
     var errorMessage by mutableStateOf<String?>(null)
-    var addToBookshelfStatus by mutableStateOf<String>("")
+    var addToBookshelfStatus by mutableStateOf<String?>(null)
 
     fun loadBookDetails(workKey: String) {
         viewModelScope.launch {
             errorMessage = null
             val result = bookService.getBookDetails(workKey)
-            result.onSuccess { details ->
-                bookDetails = details
-
-            }.onFailure { error ->
-                errorMessage = when (error) {
-                    is HttpException -> "Server error: ${error.code()}"
-                    else -> error.localizedMessage ?: "Unknown error"
+            result
+                .onSuccess { details ->
+                    bookDetails = details
                 }
-                bookDetails = null
-            }
+                .onFailure { error ->
+                    when (error) {
+                        is HttpException -> {
+                            errorMessage = "Server error: ${error.code()}"
+                        }
+
+                        else -> {
+                            errorMessage = error.localizedMessage ?: "Unknown error"
+                        }
+                    }
+                }
         }
     }
 
     fun addToBookshelf(isbn: String, rating: Float, status: ReadingStatus) {
         val userId = UserSession.user?.id ?: return
-        addToBookshelfStatus = ""
         viewModelScope.launch {
             val request = ReviewRequest(
                 isbn = isbn,
@@ -50,7 +54,8 @@ class BookDetailsViewModel(
                 status = status.toString(),
                 userId = userId
             )
-            reviewService.createReview(request)
+            val result = reviewService.createReview(request)
+            result
                 .onSuccess {
                     addToBookshelfStatus = "Book added to bookshelf"
                 }

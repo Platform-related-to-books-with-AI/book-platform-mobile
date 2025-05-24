@@ -44,8 +44,6 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
         } else {
             authenticated = false
         }
-        Log.println(Log.DEBUG, "LoginViewModel", "token: ${UserSession.token}")
-        Log.println(Log.DEBUG, "LoginViewModel", "authenticated: $authenticated")
     }
 
     fun login(email: String, password: String) {

@@ -40,6 +40,13 @@ fun BookDetailsView(
         bookDetailsViewModel.loadBookDetails(workKey)
     }
 
+    LaunchedEffect(bookDetailsViewModel.addToBookshelfStatus) {
+        bookDetailsViewModel.addToBookshelfStatus?.let { status ->
+            Toast.makeText(context, status, Toast.LENGTH_LONG).show()
+            bookDetailsViewModel.addToBookshelfStatus = null
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -71,16 +78,6 @@ fun BookDetailsView(
             onConfirm = { rating, status ->
                 val isbn = bookDetails.key?.substringAfterLast('/') ?: ""
                 bookDetailsViewModel.addToBookshelf(isbn, rating, status)
-                if(!bookDetailsViewModel.addToBookshelfStatus.isNullOrEmpty()){
-                    Toast.makeText(context ,
-                        bookDetailsViewModel.addToBookshelfStatus,
-                        Toast.LENGTH_LONG).show()
-                }
-                else{
-                    Toast.makeText(context,
-                        "Something went wrong while adding to bookshelf",
-                        Toast.LENGTH_LONG).show()
-                }
             }
         )
     }
