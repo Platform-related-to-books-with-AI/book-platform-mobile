@@ -13,9 +13,7 @@ object UserSession {
     var token: String? = null
 
     fun init(context: Context) {
-        if (!::appContext.isInitialized) {
-            appContext = context.applicationContext
-        }
+        appContext = context.applicationContext
     }
 
     fun saveAuthToken(token: String, user: UserResponse) {

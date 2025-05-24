@@ -6,7 +6,7 @@ data class AuthResponse(
 )
 
 data class UserResponse(
-    val id: Int,
+    val id: Long,
     val email: String,
     val username: String,
     val role: String,

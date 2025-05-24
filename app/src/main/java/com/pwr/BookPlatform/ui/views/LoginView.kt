@@ -26,15 +26,11 @@ fun LoginView(
         }
     }
 
-    if (loginViewModel.authenticated) {
-        onNavigate()
-    }
-
     Column(modifier = modifier.fillMaxSize()) {
         Text(
             text = stringResource(R.string.login_welcome),
             style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
         )
 
         if (showLogin) {

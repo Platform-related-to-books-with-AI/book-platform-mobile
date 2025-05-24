@@ -1,5 +1,6 @@
 package com.pwr.BookPlatform.ui.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,14 +21,31 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
     var errorMessage by mutableStateOf<String?>(null)
 
     init {
+        UserSession.getAuthToken()
+        load()
+    }
+
+    fun load(){
         var token = UserSession.token
         if (token != null) {
             viewModelScope.launch {
-                checkAuthToken(token)
+                authService.getCurrentUser(token)
+                    .onSuccess { auth ->
+                        user = auth
+                        authenticated = true
+                        UserSession.saveAuthToken(auth.token, auth.user)
+                    }
+                    .onFailure { error ->
+                        UserSession.clearAuthToken()
+                        authenticated = false
+                        user = null
+                    }
             }
         } else {
             authenticated = false
         }
+        Log.println(Log.DEBUG, "LoginViewModel", "token: ${UserSession.token}")
+        Log.println(Log.DEBUG, "LoginViewModel", "authenticated: $authenticated")
     }
 
     fun login(email: String, password: String) {
@@ -60,7 +78,6 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
             val result = authService.sendRegisterRequest(
                 registerRequest = RegisterRequest(email, username, password)
             )
-
             result
                 .onSuccess { auth ->
                     user = auth
@@ -70,31 +87,5 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
                     errorMessage = error.message ?: "Registration failed"
                 }
         }
-    }
-
-    fun checkAuthToken(token: String) {
-        viewModelScope.launch {
-            if (token != null) {
-                val result = authService.getCurrentUser(token)
-                result
-                    .onSuccess { auth ->
-                        user = auth
-                        authenticated = true
-                    }
-                    .onFailure { error ->
-                        logout()
-                    }
-            } else {
-                authenticated = false
-            }
-        }
-    }
-
-    fun logout() {
-        user = null
-        authenticated = false
-        errorMessage = null
-
-        UserSession.clearAuthToken()
     }
 }
