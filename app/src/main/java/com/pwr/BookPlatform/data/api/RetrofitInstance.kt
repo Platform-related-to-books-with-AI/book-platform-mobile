@@ -21,4 +21,8 @@ object RetrofitInstance {
     val bookApi: BookApi by lazy {
         retrofit.create(BookApi::class.java)
     }
+
+    val reviewApi: ReviewApi by lazy {
+        retrofit.create(ReviewApi::class.java)
+    }
 }

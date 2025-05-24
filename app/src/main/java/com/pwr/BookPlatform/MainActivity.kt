@@ -16,22 +16,23 @@ import androidx.navigation.compose.rememberNavController
 import com.pwr.BookPlatform.data.services.AuthService
 import com.pwr.BookPlatform.data.services.BookService
 import com.pwr.BookPlatform.data.api.RetrofitInstance
+import com.pwr.BookPlatform.data.session.UserSession
 import com.pwr.BookPlatform.ui.viewModels.BookDetailsViewModel
 import com.pwr.BookPlatform.ui.viewModels.BrowserViewModel
 import com.pwr.BookPlatform.ui.viewModels.LoginViewModel
 import com.pwr.BookPlatform.ui.views.BookDetailsView
 import com.pwr.BookPlatform.ui.views.BrowserView
 import com.pwr.BookPlatform.ui.views.LoginView
-import com.pwr.BookPlatform.ui.views.PendingActivationView
 import com.pwr.BookPlatform.ui.theme.MyApplicationTheme
+import com.pwr.BookPlatform.ui.views.HomeView
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
-    object PendingActivation : Screen("pending_activation")
     object Browse : Screen("browse")
     object BookDetails : Screen("book_details/{key}") {
         fun createRoute(key: String) = "book_details/$key"
     }
+    object Home : Screen("home")
 }
 
 
@@ -45,7 +46,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             MyApplicationTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -72,39 +72,24 @@ fun AppNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Browse.route,
+        startDestination = Screen.Login.route,
     ) {
         composable(Screen.Login.route) {
             LoginView(
                 loginViewModel = loginViewModel,
                 onNavigate = {
-                    if (loginViewModel.authenticated) {
-                        navController.navigate(Screen.Browse.route) {
-                            popUpTo(Screen.Login.route) { inclusive = true }
-                        }
-                    }
-                    else if (loginViewModel.isPendingActivation) {
-                        navController.navigate(Screen.PendingActivation.route)
-                    }
+                    navController.navigate(Screen.Browse.route)
                 }
             )
         }
-        composable(Screen.PendingActivation.route) {
-            PendingActivationView(
-                loginViewModel = loginViewModel,
+        composable(Screen.Home.route) {
+            HomeView (
+                modifier = modifier,
                 onBack = {
-                    loginViewModel.isPendingActivation = false
-                    loginViewModel.user = null
-                    loginViewModel.errorMessage = null
                     navController.popBackStack()
-                    true
                 },
                 onNavigate = {
-                    if (loginViewModel.authenticated) {
-                        navController.navigate(Screen.Browse.route) {
-                            popUpTo(Screen.Login.route) { inclusive = true }
-                        }
-                    }
+                    navController.navigate(Screen.Browse.route)
                 }
             )
         }
@@ -113,7 +98,7 @@ fun AppNavHost(
                 modifier = modifier,
                 browserViewModel = bookViewModel,
                 onBack = {
-                    navController.popBackStack(Screen.Login.route, inclusive = false)
+                    navController.popBackStack()
                 },
                 onNavigate = { book ->
                     val encodedKey = Uri.encode(book.key)

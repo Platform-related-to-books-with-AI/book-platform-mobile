@@ -20,12 +20,15 @@ fun LoginView(
 ) {
     var showLogin by remember { mutableStateOf(true) }
 
-    LaunchedEffect(loginViewModel.isPendingActivation, loginViewModel.authenticated) {
-        if (loginViewModel.isPendingActivation || loginViewModel.authenticated) {
+    LaunchedEffect(loginViewModel.authenticated) {
+        if (loginViewModel.authenticated) {
             onNavigate()
         }
     }
 
+    if (loginViewModel.authenticated) {
+        onNavigate()
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         Text(
@@ -175,52 +178,6 @@ fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) 
             shape = MaterialTheme.shapes.medium
         ) {
             Text(stringResource(R.string.register_button))
-        }
-    }
-}
-
-@Composable
-fun PendingActivationView(
-    modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel,
-    onBack: () -> Boolean,
-    onNavigate: () -> Unit
-) {
-    BackHandler {
-        onBack()
-    }
-
-    LaunchedEffect(loginViewModel.authenticated) {
-        if (loginViewModel.authenticated) {
-            onNavigate()
-        }
-    }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.pending_activation_title),
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.pending_activation_message),
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        Button(
-            onClick = { loginViewModel.checkUserStatus() },
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text(
-                stringResource(R.string.check_activation_status)
-            )
         }
     }
 }
