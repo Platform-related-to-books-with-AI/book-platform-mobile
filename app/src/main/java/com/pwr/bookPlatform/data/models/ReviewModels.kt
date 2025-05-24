@@ -43,3 +43,11 @@ data class ReviewsResponse(
     val number: Int,
     val size: Int
 )
+
+data class UpdateReviewRequest(
+    val isbn: String,
+    val rating: Float,
+    val status: String,
+    val userId: Long
+)
+

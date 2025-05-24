@@ -3,9 +3,11 @@ package com.pwr.bookPlatform.data.api
 import com.pwr.bookPlatform.data.models.ReviewRequest
 import com.pwr.bookPlatform.data.models.ReviewResponse
 import com.pwr.bookPlatform.data.models.ReviewsResponse
+import com.pwr.bookPlatform.data.models.UpdateReviewRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -27,4 +29,10 @@ interface ReviewApi {
     suspend fun deleteReview(
         @Path("id") id: Long
     )
+
+    @PATCH("reviews/{id}")
+    suspend fun updateReview(
+        @Path("id") id: Long,
+        @Body updateRequest: UpdateReviewRequest
+    ): ReviewResponse
 }

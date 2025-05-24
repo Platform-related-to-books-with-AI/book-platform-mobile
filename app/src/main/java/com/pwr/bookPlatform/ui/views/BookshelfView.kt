@@ -8,7 +8,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,9 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
+import com.gowtham.ratingbar.RatingBar
 import com.pwr.bookPlatform.R
 import com.pwr.bookPlatform.data.models.BookReview
+import com.pwr.bookPlatform.data.models.ReadingStatus
 import com.pwr.bookPlatform.ui.viewModels.BookshelfViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +45,7 @@ fun BookshelfView(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var reviewToEdit by remember { mutableStateOf<BookReview?>(null) }
 
     bookshelfViewModel.snackbarMessage?.let { message ->
         LaunchedEffect(message) {
@@ -49,6 +55,22 @@ fun BookshelfView(
             )
             bookshelfViewModel.clearSnackbarMessage()
         }
+    }
+
+    reviewToEdit?.let { bookReview ->
+        EditReviewDialog(
+            initialRating = bookReview.review.rating,
+            initialStatus = ReadingStatus.valueOf(bookReview.review.status),
+            onDismiss = { reviewToEdit = null },
+            onConfirm = { rating, status ->
+                bookshelfViewModel.updateReview(
+                    bookReview,
+                    rating,
+                    status
+                )
+                reviewToEdit = null
+            }
+        )
     }
 
     Scaffold(
@@ -95,12 +117,13 @@ fun BookshelfView(
                         ReviewItem(
                             bookReview = bookReview,
                             onDelete = { bookshelfViewModel.deleteReview(bookReview.review.id) },
+                            onEdit = { reviewToEdit = bookReview },
                             onItemClick = {
                                 onNavigateToBookDetails(bookReview.bookDetails?.key ?: "")
                             }
                         )
 
-                        Divider()
+                        HorizontalDivider()
                     }
                 }
             }
@@ -112,6 +135,7 @@ fun BookshelfView(
 fun ReviewItem(
     bookReview: BookReview,
     onDelete: () -> Unit,
+    onEdit: () -> Unit,
     onItemClick: () -> Unit
 ) {
     Row(
@@ -194,15 +218,102 @@ fun ReviewItem(
             )
         }
 
-        IconButton(
-            onClick = onDelete,
-            modifier = Modifier.padding(start = 8.dp)
+        Row(
+            modifier = Modifier.padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = stringResource(R.string.bookshelf_delete),
-                tint = Color.Red
-            )
+            IconButton(onClick = onEdit) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = stringResource(R.string.bookshelf_edit),
+                    tint = Color.Blue
+                )
+            }
+
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.bookshelf_delete),
+                    tint = Color.Red
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun EditReviewDialog(
+    initialRating: Float,
+    initialStatus: ReadingStatus,
+    onDismiss: () -> Unit,
+    onConfirm: (Float, ReadingStatus) -> Unit
+) {
+    var rating by remember { mutableStateOf(initialRating) }
+    var selectedStatus by remember { mutableStateOf(initialStatus) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.bookshelf_edit_review_title),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(stringResource(R.string.bookdetails_rating),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                RatingBar(
+                    value = rating,
+                    onValueChange = { rating = it },
+                    onRatingChanged = {},
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    stringResource(R.string.bookdetails_status),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                StatusSelector(
+                    selectedStatus = selectedStatus,
+                    onStatusSelected = { selectedStatus = it }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextButton(
+                        onClick = onDismiss
+                    ) {
+                        Text(stringResource(R.string.bookdetails_cancel))
+                    }
+
+                    Button(
+                        onClick = { onConfirm(rating, selectedStatus) }
+                    ) {
+                        Text(stringResource(R.string.bookdetails_save))
+                    }
+                }
+            }
         }
     }
 }

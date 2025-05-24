@@ -8,6 +8,7 @@ import com.pwr.bookPlatform.data.models.BookSearchResponse
 import com.pwr.bookPlatform.data.models.ReviewRequest
 import com.pwr.bookPlatform.data.models.ReviewResponse
 import com.pwr.bookPlatform.data.models.ReviewsResponse
+import com.pwr.bookPlatform.data.models.UpdateReviewRequest
 
 class BookService(
     private val bookApi: BookApi,
@@ -30,19 +31,6 @@ class BookService(
     suspend fun getBookDetails(workKey: String): Result<BookDetails> {
         return try {
             val result = bookApi.getBookDetails(workKey)
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    suspend fun getUserReviews(
-        userId: Long,
-        page: Int = 0,
-        perPage: Int = 10
-    ): Result<ReviewsResponse> {
-        return try {
-            val result = reviewApi.getUserReviews(userId, page, perPage)
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
@@ -85,6 +73,18 @@ class BookService(
             }
 
             Result.success(bookReviews)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateReview(reviewId: Long, rating: Float, status: String, isbn: String): Result<ReviewResponse> {
+        return try {
+            val userId = com.pwr.bookPlatform.data.session.UserSession.user?.id ?: throw IllegalStateException("User not logged in")
+
+            val updateRequest = UpdateReviewRequest(isbn, rating, status, userId)
+            val response = reviewApi.updateReview(reviewId, updateRequest)
+            Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
         }

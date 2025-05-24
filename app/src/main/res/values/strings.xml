@@ -64,14 +64,15 @@
     <string name="bookdetails_no_title">No title</string>
     <string name="bookdetails_no_description">No description</string>
     <string name="bookdetails_no_cover">No cover</string>
-
-    <!-- Add to Bookshelf dialog -->
+    <string name="bookdetails_first_published">First published: %1$d</string>
+    <string name="bookdetails_add_to_bookshelf">Add to Bookshelf</string>
     <string name="bookdetails_add_to_bookshelf_button">Add to Bookshelf</string>
-    <string name="bookdetails_add_to_bookshelf_title">Add to Bookshelf</string>
-    <string name="bookdetails_rating">Rating</string>
-    <string name="bookdetails_status">Status</string>
+    <string name="bookdetails_add_to_bookshelf_title">Add to My Bookshelf</string>
+    <string name="bookdetails_rating">Your Rating</string>
+    <string name="bookdetails_status">Reading Status</string>
     <string name="bookdetails_cancel">Cancel</string>
     <string name="bookdetails_add">Add</string>
+    <string name="bookdetails_save">Save</string>
     <string name="bookdetails_success_message">Book has been added to your bookshelf!</string>
     <string name="bookdetails_error_message">Error: %1$s</string>
     <string name="bookdetails_back">Back</string>
@@ -82,8 +83,10 @@
     <string name="bookshelf_back">Back</string>
     <string name="bookshelf_rating">Rating: %1$s</string>
     <string name="bookshelf_status">Status: %1$s</string>
-    <string name="bookshelf_created_at">Created at: %1$s</string>
+    <string name="bookshelf_created_at">Added on: %1$s</string>
     <string name="bookshelf_delete">Delete review</string>
+    <string name="bookshelf_edit">Edit review</string>
+    <string name="bookshelf_edit_review_title">Edit Review</string>
     <string name="bookshelf_no_reviews">No reviews to display</string>
     <string name="bookshelf_unknown_title">Unknown title</string>
     <string name="bookshelf_unknown_author">Unknown author</string>
