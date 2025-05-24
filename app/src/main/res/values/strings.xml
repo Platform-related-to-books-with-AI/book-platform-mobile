@@ -57,5 +57,15 @@
     <string name="bookdetails_add">Add</string>
     <string name="bookdetails_success_message">Book has been added to your bookshelf!</string>
     <string name="bookdetails_error_message">Error: %1$s</string>
+
+    <!-- Strings for BookshelfView -->
+    <string name="bookshelf_title">My Bookshelf</string>
+    <string name="bookshelf_back">Back</string>
+    <string name="bookshelf_rating">Rating: %1$s</string>
+    <string name="bookshelf_status">Status: %1$s</string>
+    <string name="bookshelf_created_at">Created at: %1$s</string>
+    <string name="bookshelf_delete">Delete review</string>
+    <string name="bookshelf_no_reviews">No reviews to display</string>
+    <string name="bookshelf_try_again">Try again</string>
 </resources>
 

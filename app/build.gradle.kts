@@ -11,7 +11,7 @@ val localProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.pwr.BookPlatform"
+    namespace = "com.pwr.bookPlatform"
     compileSdk = 35
 
     defaultConfig {
