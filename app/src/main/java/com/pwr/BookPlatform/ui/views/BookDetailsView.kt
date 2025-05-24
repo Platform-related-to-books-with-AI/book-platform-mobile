@@ -1,22 +1,24 @@
 package com.pwr.BookPlatform.ui.views
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.pwr.BookPlatform.data.models.BookDetails
 import com.pwr.BookPlatform.R
 import com.pwr.BookPlatform.ui.viewModels.BookDetailsViewModel
 import com.gowtham.ratingbar.RatingBar
+import com.pwr.BookPlatform.data.models.ReadingStatus
 
 @Composable
 fun BookDetailsView(
@@ -25,6 +27,11 @@ fun BookDetailsView(
     bookId: String,
     onBack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val bookDetails = bookDetailsViewModel.bookDetails
+    val errorMessage = bookDetailsViewModel.errorMessage
+    var showAddToBookshelfDialog by remember { mutableStateOf(false) }
+
     BackHandler {
         onBack()
     }
@@ -32,9 +39,6 @@ fun BookDetailsView(
         val workKey = bookId.substringAfterLast('/')
         bookDetailsViewModel.loadBookDetails(workKey)
     }
-    val bookDetails = bookDetailsViewModel.bookDetails
-    val errorMessage = bookDetailsViewModel.errorMessage
-
 
     Column(
         modifier = modifier
@@ -51,14 +55,42 @@ fun BookDetailsView(
                 )
             }
             bookDetails != null -> {
-                BookDetailsContent(bookDetails)
+                BookDetailsContent(
+                    book = bookDetails,
+                    onAddToBookshelfClick = { showAddToBookshelfDialog = true }
+                )
             }
         }
+    }
+
+    if (showAddToBookshelfDialog && bookDetails != null) {
+        AddToBookshelfDialog(
+            onDismiss = {
+                showAddToBookshelfDialog = false
+            },
+            onConfirm = { rating, status ->
+                val isbn = bookDetails.key?.substringAfterLast('/') ?: ""
+                bookDetailsViewModel.addToBookshelf(isbn, rating, status)
+                if(!bookDetailsViewModel.addToBookshelfStatus.isNullOrEmpty()){
+                    Toast.makeText(context ,
+                        bookDetailsViewModel.addToBookshelfStatus,
+                        Toast.LENGTH_LONG).show()
+                }
+                else{
+                    Toast.makeText(context,
+                        "Something went wrong while adding to bookshelf",
+                        Toast.LENGTH_LONG).show()
+                }
+            }
+        )
     }
 }
 
 @Composable
-fun BookDetailsContent(book: BookDetails) {
+fun BookDetailsContent(
+    book: BookDetails,
+    onAddToBookshelfClick: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             if (!book.covers.isNullOrEmpty() && book.covers[0] > 0) {
@@ -114,6 +146,15 @@ fun BookDetailsContent(book: BookDetails) {
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onAddToBookshelfClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(R.string.bookdetails_add_to_bookshelf_button))
+        }
+
         Spacer(modifier = Modifier.height(18.dp))
         if (!book.subject_people.isNullOrEmpty()) {
             val peopleToShow = book.subject_people.take(10)
@@ -181,6 +222,109 @@ fun BookDetailsContent(book: BookDetails) {
                 )
                 Text(
                     text = desc,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AddToBookshelfDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (rating: Float, status: ReadingStatus) -> Unit
+) {
+    var rating by remember { mutableStateOf(0f) }
+    var selectedStatus by remember { mutableStateOf(ReadingStatus.PLAN_TO_READ) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.bookdetails_add_to_bookshelf_title),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(stringResource(R.string.bookdetails_rating),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                RatingBar(
+                    value = rating,
+                    onValueChange = { rating = it },
+                    onRatingChanged = {},
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    stringResource(R.string.bookdetails_status),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                StatusSelector(
+                    selectedStatus = selectedStatus,
+                    onStatusSelected = { selectedStatus = it }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextButton(
+                        onClick = onDismiss
+                    ) {
+                        Text(stringResource(R.string.bookdetails_cancel))
+                    }
+
+                    Button(
+                        onClick = { onConfirm(rating, selectedStatus) }
+                    ) {
+                        Text(stringResource(R.string.bookdetails_add))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun StatusSelector(
+    selectedStatus: ReadingStatus,
+    onStatusSelected: (ReadingStatus) -> Unit
+) {
+    val statusOptions = ReadingStatus.values()
+
+    Column {
+        statusOptions.forEach { status ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = status == selectedStatus,
+                    onClick = { onStatusSelected(status) }
+                )
+                Text(
+                    text = status.toString().replace("_", " "),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

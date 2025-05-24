@@ -113,7 +113,7 @@ fun BrowserView(
                 ) {
                     BookListItem(book = book)
                 }
-                Divider()
+                HorizontalDivider()
             }
         }
     }

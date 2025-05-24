@@ -47,5 +47,15 @@
     <string name="bookdetails_description">Description:</string>
     <string name="bookdetails_no_title">No title</string>
     <string name="bookdetails_no_description">No description</string>
+
+    <!-- Add to Bookshelf dialog -->
+    <string name="bookdetails_add_to_bookshelf_button">Add to Bookshelf</string>
+    <string name="bookdetails_add_to_bookshelf_title">Add to Bookshelf</string>
+    <string name="bookdetails_rating">Rating</string>
+    <string name="bookdetails_status">Status</string>
+    <string name="bookdetails_cancel">Cancel</string>
+    <string name="bookdetails_add">Add</string>
+    <string name="bookdetails_success_message">Book has been added to your bookshelf!</string>
+    <string name="bookdetails_error_message">Error: %1$s</string>
 </resources>
 

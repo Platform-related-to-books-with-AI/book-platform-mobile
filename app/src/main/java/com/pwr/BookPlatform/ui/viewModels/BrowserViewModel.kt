@@ -23,13 +23,16 @@ class BrowserViewModel(private val bookService: BookService) : ViewModel() {
     ) {
         viewModelScope.launch {
             errorMessage = null
-            try {
-                val response = bookService.searchBooks(query, limit, sort, page)
+            val result = bookService.searchBooks(query, limit, sort, page)
+
+            result
+            .onSuccess { response ->
                 books = response.docs
-            } catch (e: Exception) {
-                errorMessage = when (e) {
-                    is HttpException -> "Server error: ${e.code()}"
-                    else -> e.localizedMessage ?: "Unknown error"
+            }
+            .onFailure { error ->
+                errorMessage = when (error) {
+                    is HttpException -> "Server error: ${error.code()}"
+                    else -> error.localizedMessage ?: "Unknown error"
                 }
                 books = emptyList()
             }

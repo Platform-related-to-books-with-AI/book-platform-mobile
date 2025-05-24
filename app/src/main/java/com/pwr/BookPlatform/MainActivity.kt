@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.pwr.BookPlatform.data.services.AuthService
 import com.pwr.BookPlatform.data.services.BookService
 import com.pwr.BookPlatform.data.api.RetrofitInstance
+import com.pwr.BookPlatform.data.services.ReviewService
 import com.pwr.BookPlatform.data.session.UserSession
 import com.pwr.BookPlatform.ui.viewModels.BookDetailsViewModel
 import com.pwr.BookPlatform.ui.viewModels.BrowserViewModel
@@ -39,9 +40,11 @@ sealed class Screen(val route: String) {
 class MainActivity : ComponentActivity() {
     private val authService = AuthService(RetrofitInstance.authApi)
     private val bookService = BookService(RetrofitInstance.bookApi)
+    private val reviewService = ReviewService(RetrofitInstance.reviewApi)
+
     private val loginViewModel = LoginViewModel(authService)
     private val bookViewModel = BrowserViewModel(bookService)
-    private val bookDetailsViewModel = BookDetailsViewModel(bookService)
+    private val bookDetailsViewModel = BookDetailsViewModel(bookService, reviewService)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
