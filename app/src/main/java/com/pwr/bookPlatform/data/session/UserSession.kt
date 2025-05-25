@@ -2,6 +2,7 @@ package com.pwr.bookPlatform.data.session
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.Intent
 import com.pwr.bookPlatform.data.models.UserResponse
 
 object UserSession {
@@ -31,5 +32,17 @@ object UserSession {
     fun clearAuthToken() {
         val sharedPreferences: SharedPreferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPreferences.edit().remove(KEY_AUTH_TOKEN).apply()
+
+        token = null
+        user = null
+    }
+
+    fun clearSession() {
+        clearAuthToken()
+
+        val intent = appContext.packageManager.getLaunchIntentForPackage(appContext.packageName)?.apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
+        appContext.startActivity(intent)
     }
 }

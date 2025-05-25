@@ -16,11 +16,13 @@ import androidx.navigation.compose.rememberNavController
 import com.pwr.bookPlatform.data.services.AuthService
 import com.pwr.bookPlatform.data.services.BookService
 import com.pwr.bookPlatform.data.api.RetrofitInstance
+import com.pwr.bookPlatform.data.services.PostService
 import com.pwr.bookPlatform.ui.viewModels.BookDetailsViewModel
 import com.pwr.bookPlatform.ui.viewModels.BrowserViewModel
 import com.pwr.bookPlatform.ui.viewModels.LoginViewModel
 import com.pwr.bookPlatform.ui.viewModels.BookshelfViewModel
 import com.pwr.bookPlatform.ui.viewModels.PostViewModel
+import com.pwr.bookPlatform.ui.viewModels.AccountViewModel
 import com.pwr.bookPlatform.ui.views.BookDetailsView
 import com.pwr.bookPlatform.ui.views.BrowserView
 import com.pwr.bookPlatform.ui.views.LoginView
@@ -28,6 +30,7 @@ import com.pwr.bookPlatform.ui.theme.MyApplicationTheme
 import com.pwr.bookPlatform.ui.views.BookshelfView
 import com.pwr.bookPlatform.ui.views.HomeView
 import com.pwr.bookPlatform.ui.views.PostView
+import com.pwr.bookPlatform.ui.views.AccountView
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -38,18 +41,20 @@ sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Bookshelf : Screen("bookshelf")
     object Posts : Screen("posts")
+    object Account : Screen("account")
 }
 
 class MainActivity : ComponentActivity() {
     private val authService = AuthService(RetrofitInstance.authApi)
     private val bookService = BookService(RetrofitInstance.bookApi, RetrofitInstance.reviewApi)
-    private val postService = com.pwr.bookPlatform.data.services.PostService(RetrofitInstance.postApi)
+    private val postService = PostService(RetrofitInstance.postApi)
 
     private val loginViewModel = LoginViewModel(authService)
     private val bookViewModel = BrowserViewModel(bookService)
     private val bookDetailsViewModel = BookDetailsViewModel(bookService)
     private val bookshelfViewModel = BookshelfViewModel(bookService)
-    private val postViewModel = com.pwr.bookPlatform.ui.viewModels.PostViewModel(postService)
+    private val postViewModel = PostViewModel(postService)
+    private val accountViewModel = AccountViewModel(authService)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,7 @@ class MainActivity : ComponentActivity() {
                         bookDetailsViewModel = bookDetailsViewModel,
                         bookshelfViewModel = bookshelfViewModel,
                         postViewModel = postViewModel,
+                        accountViewModel = accountViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -77,7 +83,8 @@ fun AppNavHost(
     bookViewModel: BrowserViewModel,
     bookDetailsViewModel: BookDetailsViewModel,
     bookshelfViewModel: BookshelfViewModel,
-    postViewModel: com.pwr.bookPlatform.ui.viewModels.PostViewModel = com.pwr.bookPlatform.ui.viewModels.PostViewModel(com.pwr.bookPlatform.data.services.PostService(RetrofitInstance.postApi)),
+    postViewModel: PostViewModel,
+    accountViewModel: AccountViewModel,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -109,6 +116,9 @@ fun AppNavHost(
                 },
                 onNavigateToPosts = {
                     navController.navigate(Screen.Posts.route)
+                },
+                onNavigateToAccount = {
+                    navController.navigate(Screen.Account.route)
                 },
                 onLogout = {
                     loginViewModel.authenticated = false
@@ -163,6 +173,15 @@ fun AppNavHost(
             PostView(
                 modifier = modifier,
                 postViewModel = postViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.Account.route) {
+            AccountView(
+                modifier = modifier,
+                accountViewModel = accountViewModel,
                 onBack = {
                     navController.popBackStack()
                 }

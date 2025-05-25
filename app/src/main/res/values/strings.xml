@@ -11,6 +11,8 @@
     <string name="nav_go_to_browse">Go to Browse</string>
     <string name="nav_my_bookshelf">My Bookshelf</string>
     <string name="nav_logout">Logout</string>
+    <string name="nav_manage_account">Manage Account</string>
+    <string name="nav_my_posts">My Posts</string>
 
     <!-- Strings for login view -->
     <string name="login_welcome">Welcome to BookPlatform</string>
@@ -102,6 +104,38 @@
     <string name="posts_enter_text">Enter your post text</string>
     <string name="posts_post">Post</string>
     <string name="posts_likes">Likes: %1$d</string>
-    <string name="nav_my_posts">My Posts</string>
+
+    <!-- Strings for account management -->
+    <string name="account_management">Account Management</string>
+    <string name="account_info">Account Information</string>
+    <string name="user_id">User ID: %1$d</string>
+    <string name="user_role">Role: %1$s</string>
+    <string name="account_active">Status: Active</string>
+    <string name="account_inactive">Status: Inactive</string>
+    <string name="account_created">Created: %1$s</string>
+    <string name="account_updated">Updated: %1$s</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="email">Email</string>
+    <string name="nickname">Username</string>
+    <string name="nickname_requirements">3-20 characters</string>
+    <string name="new_password">New password</string>
+    <string name="password_optional">Leave empty if you dont want to change</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="reset">Reset</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="back">Back</string>
+
+    <!-- Nowe zasoby dla dialogu edycji konta -->
+    <string name="edit_email">Edit email</string>
+    <string name="edit_nickname">Edit username</string>
+    <string name="change_password">Change password</string>
+    <string name="current_email">Current email</string>
+    <string name="current_nickname">Current username</string>
+    <string name="password_unchanged">Password will not be changed</string>
+    <string name="password_requirements">Enter a new password</string>
+    <string name="email_value">%1$s</string>
+    <string name="nickname_value">%1$s</string>
+    <string name="cancel">Cancel</string>
 </resources>
 

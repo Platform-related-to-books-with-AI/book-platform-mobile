@@ -3,6 +3,8 @@ package com.pwr.bookPlatform.data.services
 import com.pwr.bookPlatform.data.models.AuthResponse
 import com.pwr.bookPlatform.data.models.LoginRequest
 import com.pwr.bookPlatform.data.models.RegisterRequest
+import com.pwr.bookPlatform.data.models.UpdateUserRequest
+import com.pwr.bookPlatform.data.models.UserResponse
 import com.pwr.bookPlatform.data.api.AuthApi
 
 class AuthService(private val api: AuthApi) {
@@ -33,4 +35,14 @@ class AuthService(private val api: AuthApi) {
             Result.failure(e)
         }
     }
+
+    suspend fun updateUser(userId: Long, token: String, updateRequest: UpdateUserRequest): Result<UserResponse> {
+        return try {
+            val response = api.updateUser(userId, "Bearer $token", updateRequest)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
+
