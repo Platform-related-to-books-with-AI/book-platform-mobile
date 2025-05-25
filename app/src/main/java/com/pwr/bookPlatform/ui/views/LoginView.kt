@@ -125,7 +125,7 @@ fun LoginForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) {
 @Composable
 fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) {
     var email by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
+    var nickname by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
@@ -151,8 +151,8 @@ fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) 
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
+            value = nickname,
+            onValueChange = { nickname = it },
             label = { Text(stringResource(R.string.register_username)) },
             modifier = Modifier.fillMaxWidth()
         )
@@ -180,7 +180,7 @@ fun RegisterForm(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { loginViewModel.register(email, username, password) },
+            onClick = { loginViewModel.register(email, nickname, password) },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium
         ) {

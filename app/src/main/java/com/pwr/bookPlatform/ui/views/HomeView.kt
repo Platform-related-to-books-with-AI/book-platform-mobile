@@ -29,6 +29,7 @@ fun HomeView(
     onBack: () -> Boolean,
     onNavigate: () -> Unit,
     onNavigateToBookshelf: () -> Unit,
+    onNavigateToPosts: () -> Unit,
     onLogout: () -> Unit
 ) {
     BackHandler {
@@ -68,6 +69,15 @@ fun HomeView(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = stringResource(R.string.nav_my_bookshelf))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onNavigateToPosts,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.nav_my_posts))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

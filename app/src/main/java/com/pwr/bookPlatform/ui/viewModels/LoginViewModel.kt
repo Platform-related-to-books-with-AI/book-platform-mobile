@@ -69,11 +69,11 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
         }
     }
 
-    fun register(email: String, username: String, password: String) {
+    fun register(email: String, nickname: String, password: String) {
         viewModelScope.launch {
             snackbarMessage = null
             authService.sendRegisterRequest(
-                registerRequest = RegisterRequest(email, username, password)
+                registerRequest = RegisterRequest(email, nickname, password)
             ).fold(
                 onSuccess = { auth ->
                     user = auth

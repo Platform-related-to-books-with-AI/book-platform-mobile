@@ -20,12 +20,14 @@ import com.pwr.bookPlatform.ui.viewModels.BookDetailsViewModel
 import com.pwr.bookPlatform.ui.viewModels.BrowserViewModel
 import com.pwr.bookPlatform.ui.viewModels.LoginViewModel
 import com.pwr.bookPlatform.ui.viewModels.BookshelfViewModel
+import com.pwr.bookPlatform.ui.viewModels.PostViewModel
 import com.pwr.bookPlatform.ui.views.BookDetailsView
 import com.pwr.bookPlatform.ui.views.BrowserView
 import com.pwr.bookPlatform.ui.views.LoginView
 import com.pwr.bookPlatform.ui.theme.MyApplicationTheme
 import com.pwr.bookPlatform.ui.views.BookshelfView
 import com.pwr.bookPlatform.ui.views.HomeView
+import com.pwr.bookPlatform.ui.views.PostView
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -35,16 +37,19 @@ sealed class Screen(val route: String) {
     }
     object Home : Screen("home")
     object Bookshelf : Screen("bookshelf")
+    object Posts : Screen("posts")
 }
 
 class MainActivity : ComponentActivity() {
     private val authService = AuthService(RetrofitInstance.authApi)
     private val bookService = BookService(RetrofitInstance.bookApi, RetrofitInstance.reviewApi)
+    private val postService = com.pwr.bookPlatform.data.services.PostService(RetrofitInstance.postApi)
 
     private val loginViewModel = LoginViewModel(authService)
     private val bookViewModel = BrowserViewModel(bookService)
     private val bookDetailsViewModel = BookDetailsViewModel(bookService)
     private val bookshelfViewModel = BookshelfViewModel(bookService)
+    private val postViewModel = com.pwr.bookPlatform.ui.viewModels.PostViewModel(postService)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +62,7 @@ class MainActivity : ComponentActivity() {
                         bookViewModel = bookViewModel,
                         bookDetailsViewModel = bookDetailsViewModel,
                         bookshelfViewModel = bookshelfViewModel,
+                        postViewModel = postViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -71,6 +77,7 @@ fun AppNavHost(
     bookViewModel: BrowserViewModel,
     bookDetailsViewModel: BookDetailsViewModel,
     bookshelfViewModel: BookshelfViewModel,
+    postViewModel: com.pwr.bookPlatform.ui.viewModels.PostViewModel = com.pwr.bookPlatform.ui.viewModels.PostViewModel(com.pwr.bookPlatform.data.services.PostService(RetrofitInstance.postApi)),
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -99,6 +106,9 @@ fun AppNavHost(
                 },
                 onNavigateToBookshelf = {
                     navController.navigate(Screen.Bookshelf.route)
+                },
+                onNavigateToPosts = {
+                    navController.navigate(Screen.Posts.route)
                 },
                 onLogout = {
                     loginViewModel.authenticated = false
@@ -146,6 +156,15 @@ fun AppNavHost(
                 onNavigateToBookDetails = { bookId ->
                     val encodedKey = Uri.encode(bookId)
                     navController.navigate(Screen.BookDetails.createRoute(encodedKey))
+                }
+            )
+        }
+        composable(Screen.Posts.route) {
+            PostView(
+                modifier = modifier,
+                postViewModel = postViewModel,
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }

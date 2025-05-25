@@ -26,7 +26,7 @@
     <!-- Strings for register view -->
     <string name="register_title">Register</string>
     <string name="register_email">Email</string>
-    <string name="register_username">Username</string>
+    <string name="register_username">Nickname</string>
     <string name="register_password">Password</string>
     <string name="register_confirm_password">Confirm Password</string>
     <string name="register_button">Register</string>
@@ -92,5 +92,16 @@
     <string name="bookshelf_unknown_author">Unknown author</string>
     <string name="bookshelf_review_deleted">Review successfully deleted</string>
     <string name="bookshelf_delete_error">Error deleting review: %1$s</string>
+
+    <!-- Strings for post view -->
+    <string name="posts_title">Posts</string>
+    <string name="posts_back">Back</string>
+    <string name="posts_search_user_id">Enter Nickname</string>
+    <string name="posts_search">Search</string>
+    <string name="posts_create_new">Create New Post</string>
+    <string name="posts_enter_text">Enter your post text</string>
+    <string name="posts_post">Post</string>
+    <string name="posts_likes">Likes: %1$d</string>
+    <string name="nav_my_posts">My Posts</string>
 </resources>
 

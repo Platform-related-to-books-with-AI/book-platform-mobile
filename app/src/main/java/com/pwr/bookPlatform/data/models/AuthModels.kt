@@ -8,7 +8,7 @@ data class AuthResponse(
 data class UserResponse(
     val id: Long,
     val email: String,
-    val username: String,
+    val nickname: String,
     val role: String,
     val active: Boolean,
     val createdAt: String,
@@ -22,6 +22,7 @@ data class LoginRequest(
 
 data class RegisterRequest(
     val email: String,
-    val username: String,
+    val nickname: String,
     val password: String
 )
+
