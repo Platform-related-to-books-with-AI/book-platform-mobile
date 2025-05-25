@@ -12,9 +12,7 @@ import com.pwr.bookPlatform.data.session.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class AccountViewModel(
-    private val authService: AuthService
-) : ViewModel() {
+class AccountViewModel : ViewModel() {
 
     var user by mutableStateOf<UserResponse?>(null)
     var snackbarMessage by mutableStateOf<String?>(null)
@@ -62,7 +60,7 @@ class AccountViewModel(
                 return@launch
             }
 
-            authService.updateUser(currentUser.id, token, updateRequest).fold(
+            AuthService.updateUser(currentUser.id, token, updateRequest).fold(
                 onSuccess = { updatedUser ->
                     user = updatedUser
                     snackbarMessage = "Profile updated successfully. Please log in again."

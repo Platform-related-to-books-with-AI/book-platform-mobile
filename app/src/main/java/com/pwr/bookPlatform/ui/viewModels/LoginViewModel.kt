@@ -13,7 +13,7 @@ import com.pwr.bookPlatform.data.session.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class LoginViewModel(private val authService: AuthService) : ViewModel() {
+class LoginViewModel : ViewModel() {
 
     var authenticated by mutableStateOf(false)
     var user by mutableStateOf<AuthResponse?>(null)
@@ -28,7 +28,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
         var token = UserSession.token
         if (token != null) {
             viewModelScope.launch {
-                authService.getCurrentUser(token).fold(
+                AuthService.getCurrentUser(token).fold(
                     onSuccess = { auth ->
                         user = auth
                         authenticated = true
@@ -49,7 +49,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             snackbarMessage = null
-            authService.sendLoginRequest(
+            AuthService.sendLoginRequest(
                 loginRequest = LoginRequest(email, password)
             ).fold(
                 onSuccess = { auth ->
@@ -72,7 +72,7 @@ class LoginViewModel(private val authService: AuthService) : ViewModel() {
     fun register(email: String, nickname: String, password: String) {
         viewModelScope.launch {
             snackbarMessage = null
-            authService.sendRegisterRequest(
+            AuthService.sendRegisterRequest(
                 registerRequest = RegisterRequest(email, nickname, password)
             ).fold(
                 onSuccess = { auth ->

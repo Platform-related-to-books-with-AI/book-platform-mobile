@@ -10,7 +10,7 @@ import com.pwr.bookPlatform.data.services.BookService
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class BrowserViewModel(private val bookService: BookService) : ViewModel() {
+class BrowserViewModel : ViewModel() {
 
     var books by mutableStateOf<List<BookDoc>>(emptyList())
     var snackbarMessage by mutableStateOf<String?>(null)
@@ -23,7 +23,7 @@ class BrowserViewModel(private val bookService: BookService) : ViewModel() {
     ) {
         viewModelScope.launch {
             snackbarMessage = null
-            bookService.searchBooks(query, limit, sort, page).fold(
+            BookService.searchBooks(query, limit, sort, page).fold(
                 onSuccess = { response ->
                     books = response.docs
                 },

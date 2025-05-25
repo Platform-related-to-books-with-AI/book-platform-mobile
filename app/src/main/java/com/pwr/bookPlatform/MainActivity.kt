@@ -13,10 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.pwr.bookPlatform.data.services.AuthService
-import com.pwr.bookPlatform.data.services.BookService
-import com.pwr.bookPlatform.data.api.RetrofitInstance
-import com.pwr.bookPlatform.data.services.PostService
 import com.pwr.bookPlatform.ui.viewModels.BookDetailsViewModel
 import com.pwr.bookPlatform.ui.viewModels.BrowserViewModel
 import com.pwr.bookPlatform.ui.viewModels.LoginViewModel
@@ -45,16 +41,12 @@ sealed class Screen(val route: String) {
 }
 
 class MainActivity : ComponentActivity() {
-    private val authService = AuthService(RetrofitInstance.authApi)
-    private val bookService = BookService(RetrofitInstance.bookApi, RetrofitInstance.reviewApi)
-    private val postService = PostService(RetrofitInstance.postApi)
-
-    private val loginViewModel = LoginViewModel(authService)
-    private val bookViewModel = BrowserViewModel(bookService)
-    private val bookDetailsViewModel = BookDetailsViewModel(bookService)
-    private val bookshelfViewModel = BookshelfViewModel(bookService)
-    private val postViewModel = PostViewModel(postService)
-    private val accountViewModel = AccountViewModel(authService)
+    private val loginViewModel = LoginViewModel()
+    private val bookViewModel = BrowserViewModel()
+    private val bookDetailsViewModel = BookDetailsViewModel()
+    private val bookshelfViewModel = BookshelfViewModel()
+    private val postViewModel = PostViewModel()
+    private val accountViewModel = AccountViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

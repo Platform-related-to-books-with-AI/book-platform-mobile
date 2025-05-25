@@ -6,8 +6,10 @@ import com.pwr.bookPlatform.data.models.RegisterRequest
 import com.pwr.bookPlatform.data.models.UpdateUserRequest
 import com.pwr.bookPlatform.data.models.UserResponse
 import com.pwr.bookPlatform.data.api.AuthApi
+import com.pwr.bookPlatform.data.api.RetrofitInstance
 
-class AuthService(private val api: AuthApi) {
+object AuthService {
+    private val api: AuthApi by lazy { RetrofitInstance.authApi }
 
     suspend fun sendLoginRequest(loginRequest: LoginRequest): Result<AuthResponse> {
         return try {

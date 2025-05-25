@@ -11,9 +11,7 @@ import com.pwr.bookPlatform.data.session.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class PostViewModel(
-    private val postService: PostService
-) : ViewModel() {
+class PostViewModel() : ViewModel() {
 
     var posts by mutableStateOf<List<Post>>(emptyList())
     var displayNickname by mutableStateOf("")
@@ -32,7 +30,7 @@ class PostViewModel(
         viewModelScope.launch {
             snackbarMessage = null
 
-            postService.getUserPosts(nickname, page).fold(
+            PostService.getUserPosts(nickname, page).fold(
                 onSuccess = { response ->
                     posts = response.content
                     totalPages = response.totalPages
@@ -65,7 +63,7 @@ class PostViewModel(
         viewModelScope.launch {
             snackbarMessage = null
 
-            postService.createPost(postText, nickname).fold(
+            PostService.createPost(postText, nickname).fold(
                 onSuccess = { post ->
                     posts = listOf(post) + posts
                     snackbarMessage = "Post created successfully"

@@ -1,13 +1,14 @@
 package com.pwr.bookPlatform.data.services
 
 import com.pwr.bookPlatform.data.api.PostApi
+import com.pwr.bookPlatform.data.api.RetrofitInstance
 import com.pwr.bookPlatform.data.models.Post
 import com.pwr.bookPlatform.data.models.PostRequest
 import com.pwr.bookPlatform.data.models.PostsResponse
 
-class PostService(
-    private val postApi: PostApi
-) {
+object PostService {
+    private val postApi: PostApi by lazy { RetrofitInstance.postApi }
+
     suspend fun getUserPosts(
         nickname: String,
         page: Int = 0,

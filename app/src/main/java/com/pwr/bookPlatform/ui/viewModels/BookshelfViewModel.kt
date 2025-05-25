@@ -6,14 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pwr.bookPlatform.data.models.BookReview
+import com.pwr.bookPlatform.data.models.ReadingStatus
 import com.pwr.bookPlatform.data.services.BookService
 import com.pwr.bookPlatform.data.session.UserSession
-import com.pwr.bookPlatform.data.models.ReadingStatus
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class BookshelfViewModel(
-    private val bookService: BookService
 ) : ViewModel() {
 
     var bookReviews by mutableStateOf<List<BookReview>>(emptyList())
@@ -32,7 +31,7 @@ class BookshelfViewModel(
                 return@launch
             }
 
-            bookService.getUserBookReviews(userId).fold(
+            BookService.getUserBookReviews(userId).fold(
                 onSuccess = { reviews ->
                     bookReviews = reviews
                 },
@@ -50,7 +49,7 @@ class BookshelfViewModel(
         viewModelScope.launch {
             snackbarMessage = null
 
-            bookService.deleteReview(reviewId).fold(
+            BookService.deleteReview(reviewId).fold(
                 onSuccess = {
                     bookReviews = bookReviews.filter { it.review.id != reviewId }
                     snackbarMessage = "Review successfully deleted"
@@ -74,7 +73,7 @@ class BookshelfViewModel(
                 return@launch
             }
 
-            bookService.updateReview(review.review.id, newRating, newStatus.toString(), review.review.isbn).fold(
+            BookService.updateReview(review.review.id, newRating, newStatus.toString(), review.review.isbn).fold(
                 onSuccess = { updatedReview ->
                     bookReviews = bookReviews.map { bookReview ->
                         if (bookReview.review.id == review.review.id) {

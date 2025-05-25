@@ -13,15 +13,13 @@ import com.pwr.bookPlatform.data.session.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class BookDetailsViewModel(
-    private val bookService: BookService
-) : ViewModel() {
+class BookDetailsViewModel : ViewModel() {
     var bookDetails by mutableStateOf<BookDetails?>(null)
     var snackbarMessage by mutableStateOf<String?>(null)
 
     fun loadBookDetails(workKey: String) {
         viewModelScope.launch {
-            bookService.getBookDetails(workKey).fold(
+            BookService.getBookDetails(workKey).fold(
                 onSuccess = { details ->
                     bookDetails = details
                 },
@@ -47,7 +45,7 @@ class BookDetailsViewModel(
                 status = status.toString(),
                 userId = userId
             )
-            bookService.createReview(request).fold(
+            BookService.createReview(request).fold(
                 onSuccess = {
                     snackbarMessage = "Book added to bookshelf"
                 },

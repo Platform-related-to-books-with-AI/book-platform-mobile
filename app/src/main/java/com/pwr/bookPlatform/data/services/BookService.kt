@@ -2,6 +2,7 @@ package com.pwr.bookPlatform.data.services
 
 import com.pwr.bookPlatform.data.api.BookApi
 import com.pwr.bookPlatform.data.api.ReviewApi
+import com.pwr.bookPlatform.data.api.RetrofitInstance
 import com.pwr.bookPlatform.data.models.BookDetails
 import com.pwr.bookPlatform.data.models.BookReview
 import com.pwr.bookPlatform.data.models.BookSearchResponse
@@ -10,10 +11,10 @@ import com.pwr.bookPlatform.data.models.ReviewResponse
 import com.pwr.bookPlatform.data.models.UpdateReviewRequest
 import com.pwr.bookPlatform.data.session.UserSession
 
-class BookService(
-    private val bookApi: BookApi,
-    private val reviewApi: ReviewApi
-) {
+object BookService {
+    private val bookApi: BookApi by lazy { RetrofitInstance.bookApi }
+    private val reviewApi: ReviewApi by lazy { RetrofitInstance.reviewApi }
+
     suspend fun searchBooks(
         query: String,
         limit: Int = 20,
