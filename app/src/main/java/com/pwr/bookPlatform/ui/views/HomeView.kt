@@ -40,7 +40,7 @@ fun HomeView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.home_title)) }
+                title = { Text(stringResource(R.string.nav_title)) }
             )
         }
     ) { paddingValues ->

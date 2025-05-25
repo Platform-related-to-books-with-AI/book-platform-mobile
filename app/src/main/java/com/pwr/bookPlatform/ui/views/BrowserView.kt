@@ -64,7 +64,7 @@ fun BrowserView(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.browser_back)
+                            contentDescription = stringResource(R.string.global_back)
                         )
                     }
                 }
@@ -92,7 +92,7 @@ fun BrowserView(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(onClick = { browserViewModel.search(query, sort = selectedSort.sortValue) }) {
-                    Text(stringResource(R.string.browser_search))
+                    Text(stringResource(R.string.global_search))
                 }
                 Box(
                     modifier = Modifier

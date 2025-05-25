@@ -64,7 +64,7 @@ fun BookDetailsView(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.bookdetails_back)
+                            contentDescription = stringResource(R.string.global_back)
                         )
                     }
                 }
@@ -300,13 +300,13 @@ fun AddToBookshelfDialog(
                     TextButton(
                         onClick = onDismiss
                     ) {
-                        Text(stringResource(R.string.bookdetails_cancel))
+                        Text(stringResource(R.string.global_cancel))
                     }
 
                     Button(
                         onClick = { onConfirm(rating, selectedStatus) }
                     ) {
-                        Text(stringResource(R.string.bookdetails_add))
+                        Text(stringResource(R.string.bookdetails_add_to_bookshelf))
                     }
                 }
             }

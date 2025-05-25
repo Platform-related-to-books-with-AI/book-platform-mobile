@@ -41,9 +41,7 @@ fun BookshelfView(
         onBack()
     }
 
-    LaunchedEffect(Unit) {
-        bookshelfViewModel.loadUserReviews()
-    }
+    bookshelfViewModel.loadUserReviews()
 
     val snackbarHostState = remember { SnackbarHostState() }
     var reviewToEdit by remember { mutableStateOf<BookReview?>(null) }
@@ -82,7 +80,7 @@ fun BookshelfView(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.bookshelf_back)
+                            contentDescription = stringResource(R.string.global_back)
                         )
                     }
                 }
@@ -305,13 +303,13 @@ fun EditReviewDialog(
                     TextButton(
                         onClick = onDismiss
                     ) {
-                        Text(stringResource(R.string.bookdetails_cancel))
+                        Text(stringResource(R.string.global_cancel))
                     }
 
                     Button(
                         onClick = { onConfirm(rating, selectedStatus) }
                     ) {
-                        Text(stringResource(R.string.bookdetails_save))
+                        Text(stringResource(R.string.global_search))
                     }
                 }
             }

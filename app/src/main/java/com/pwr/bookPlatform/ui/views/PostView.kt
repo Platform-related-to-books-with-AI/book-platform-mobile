@@ -71,9 +71,9 @@ fun PostView(
                 title = {
                     if (postViewModel.displayNickname.isNotEmpty()) {
                         if (postViewModel.displayNickname == "My") {
-                            Text("My Posts")
+                            Text(stringResource(R.string.posts_my_posts))
                         } else {
-                            Text("${postViewModel.displayNickname}'s Posts")
+                            Text(stringResource(R.string.posts_user_posts, postViewModel.displayNickname))
                         }
                     } else {
                         Text(stringResource(R.string.posts_title))
@@ -83,7 +83,7 @@ fun PostView(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.posts_back)
+                            contentDescription = stringResource(R.string.global_back)
                         )
                     }
                 }
@@ -114,7 +114,7 @@ fun PostView(
                 IconButton(onClick = { postViewModel.searchPostsByNickname(searchNickname) }) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(R.string.posts_search)
+                        contentDescription = stringResource(R.string.global_search)
                     )
                 }
             }

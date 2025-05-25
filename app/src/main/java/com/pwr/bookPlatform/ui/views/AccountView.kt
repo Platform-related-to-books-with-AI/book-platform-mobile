@@ -64,12 +64,12 @@ fun AccountView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.account_management)) },
+                title = { Text(stringResource(R.string.account_management)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.back)
+                            contentDescription = stringResource(R.string.global_back)
                         )
                     }
                 }
@@ -101,7 +101,7 @@ fun AccountView(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Text(
-                            text = stringResource(id = R.string.account_info),
+                            text = stringResource(R.string.account_info),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
@@ -164,7 +164,7 @@ fun AccountView(
                             ) {
                                 Text(
                                     text = stringResource(
-                                        id = if (user.active) R.string.account_active else R.string.account_inactive
+                                        if (user.active) R.string.account_active else R.string.account_inactive
                                     ),
                                     fontSize = 16.sp,
                                     color = if (user.active) Color(0xFF4CAF50) else Color(0xFFE57373),
@@ -181,13 +181,13 @@ fun AccountView(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = stringResource(id = R.string.account_created, DateUtils.formatDateTime(user.createdAt)),
+                                text = stringResource(R.string.account_created, DateUtils.formatDateTime(user.createdAt)),
                                 fontSize = 14.sp,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
 
                             Text(
-                                text = stringResource(id = R.string.account_updated, DateUtils.formatDateTime(user.updatedAt)),
+                                text = stringResource(R.string.account_updated, DateUtils.formatDateTime(user.updatedAt)),
                                 fontSize = 14.sp,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
@@ -205,7 +205,7 @@ fun AccountView(
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                stringResource(id = R.string.edit_account),
+                                stringResource(R.string.account_edit_account),
                                 fontSize = 18.sp
                             )
                         }
@@ -234,7 +234,7 @@ fun EditAccountDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(id = R.string.edit_account)) },
+        title = { Text(stringResource(R.string.account_edit_account)) },
         text = {
             Column(
                 modifier = Modifier
@@ -243,7 +243,7 @@ fun EditAccountDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 SectionHeader(
-                    title = stringResource(id = R.string.edit_email),
+                    title = stringResource(R.string.account_edit_email),
                     isActive = emailSectionActive,
                     onClick = { emailSectionActive = !emailSectionActive }
                 )
@@ -252,7 +252,7 @@ fun EditAccountDialog(
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text(stringResource(id = R.string.email)) },
+                        label = { Text(stringResource(R.string.account_email)) },
                         leadingIcon = { Icon(Icons.Filled.Email, contentDescription = null) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
@@ -263,7 +263,7 @@ fun EditAccountDialog(
                     )
                 } else {
                     Text(
-                        text = "${stringResource(id = R.string.current_email)}: ${user?.email}",
+                        text = "${stringResource(R.string.account_current_email)}: ${user?.email}",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -272,7 +272,7 @@ fun EditAccountDialog(
                 Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                 SectionHeader(
-                    title = stringResource(id = R.string.edit_nickname),
+                    title = stringResource(R.string.account_edit_nickname),
                     isActive = nicknameSectionActive,
                     onClick = { nicknameSectionActive = !nicknameSectionActive }
                 )
@@ -281,7 +281,7 @@ fun EditAccountDialog(
                     OutlinedTextField(
                         value = nickname,
                         onValueChange = { nickname = it },
-                        label = { Text(stringResource(id = R.string.nickname)) },
+                        label = { Text(stringResource(R.string.account_nickname)) },
                         leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
@@ -290,12 +290,12 @@ fun EditAccountDialog(
                             imeAction = ImeAction.Next
                         ),
                         supportingText = {
-                            Text(stringResource(id = R.string.nickname_requirements))
+                            Text(stringResource(R.string.account_nickname_requirements))
                         }
                     )
                 } else {
                     Text(
-                        text = "${stringResource(id = R.string.current_nickname)}: ${user?.nickname}",
+                        text = "${stringResource(R.string.account_current_nickname)}: ${user?.nickname}",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -304,7 +304,7 @@ fun EditAccountDialog(
                 Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                 SectionHeader(
-                    title = stringResource(id = R.string.change_password),
+                    title = stringResource(R.string.account_change_password),
                     isActive = passwordSectionActive,
                     onClick = { passwordSectionActive = !passwordSectionActive }
                 )
@@ -313,7 +313,7 @@ fun EditAccountDialog(
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(stringResource(id = R.string.new_password)) },
+                        label = { Text(stringResource(R.string.account_new_password)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -325,20 +325,20 @@ fun EditAccountDialog(
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Text(
                                     text = if (passwordVisible)
-                                        stringResource(id = R.string.hide_password)
+                                        stringResource(R.string.account_hide_password)
                                     else
-                                        stringResource(id = R.string.show_password),
+                                        stringResource(R.string.account_show_password),
                                     fontSize = 12.sp
                                 )
                             }
                         },
                         supportingText = {
-                            Text(stringResource(id = R.string.password_requirements))
+                            Text(stringResource(R.string.account_password_requirements))
                         }
                     )
                 } else {
                     Text(
-                        text = stringResource(id = R.string.password_unchanged),
+                        text = stringResource(R.string.account_password_unchanged),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -357,14 +357,14 @@ fun EditAccountDialog(
                 },
                 enabled = (emailSectionActive || nicknameSectionActive || passwordSectionActive)
             ) {
-                Text(stringResource(id = R.string.save_changes))
+                Text(stringResource(R.string.account_save_changes))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text(stringResource(id = R.string.cancel))
+                Text(stringResource(R.string.global_cancel))
             }
         }
     )

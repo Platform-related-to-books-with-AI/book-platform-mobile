@@ -1,13 +1,18 @@
 <resources>
-    <!-- General Application strings -->
+    <!-- Global strings -->
     <string name="app_name">BookPlatform</string>
-    <string name="home_title">Book Platform</string>
-    <string name="error_user_not_logged_in">User is not logged in</string>
-    <string name="error_unknown">Unknown error</string>
-    <string name="error_server">Server error: %1$s</string>
+    <string name="global_home_title">Book Platform</string>
+    <string name="global_error_user_not_logged_in">User is not logged in</string>
+    <string name="global_error_unknown">Unknown error</string>
+    <string name="global_error_server">Server error: %1$s</string>
+
+    <string name="global_cancel">Cancel</string>
+    <string name="global_back">Back</string>
+    <string name="global_reset">Reset</string>
+    <string name="global_search">Search</string>
 
     <!-- Navigation -->
-    <string name="nav_back">Back</string>
+    <string name="nav_title">Home</string>
     <string name="nav_go_to_browse">Go to Browse</string>
     <string name="nav_my_bookshelf">My Bookshelf</string>
     <string name="nav_logout">Logout</string>
@@ -34,15 +39,8 @@
     <string name="register_button">Register</string>
     <string name="registration_failed">Registration failed</string>
 
-    <string name="pending_activation_title">Pending Activation</string>
-    <string name="pending_activation_message">Please check your email to activate your account.</string>
-    <string name="resend_activation_email">Resend email</string>
-    <string name="check_activation_status">check activation status</string>
-
     <!-- Strings for browser view -->
     <string name="browser_title">Browse</string>
-    <string name="browser_back">Back</string>
-    <string name="browser_search">Search</string>
     <string name="browser_search_books">Search Books</string>
     <string name="browser_unknown_author">Unknown Author</string>
     <string name="browser_first_published">First published: %1$d</string>
@@ -72,17 +70,12 @@
     <string name="bookdetails_add_to_bookshelf_title">Add to My Bookshelf</string>
     <string name="bookdetails_rating">Your Rating</string>
     <string name="bookdetails_status">Reading Status</string>
-    <string name="bookdetails_cancel">Cancel</string>
-    <string name="bookdetails_add">Add</string>
-    <string name="bookdetails_save">Save</string>
-    <string name="bookdetails_success_message">Book has been added to your bookshelf!</string>
+    <string name="bookdetails_success_message">Book has been added to your bookshelf</string>
     <string name="bookdetails_error_message">Error: %1$s</string>
-    <string name="bookdetails_back">Back</string>
     <string name="bookdetails_book_added">Book added to bookshelf</string>
 
     <!-- Strings for BookshelfView -->
     <string name="bookshelf_title">My Bookshelf</string>
-    <string name="bookshelf_back">Back</string>
     <string name="bookshelf_rating">Rating: %1$s</string>
     <string name="bookshelf_status">Status: %1$s</string>
     <string name="bookshelf_created_at">Added on: %1$s</string>
@@ -97,13 +90,13 @@
 
     <!-- Strings for post view -->
     <string name="posts_title">Posts</string>
-    <string name="posts_back">Back</string>
     <string name="posts_search_user_id">Enter Nickname</string>
-    <string name="posts_search">Search</string>
     <string name="posts_create_new">Create New Post</string>
     <string name="posts_enter_text">Enter your post text</string>
     <string name="posts_post">Post</string>
     <string name="posts_likes">Likes: %1$d</string>
+    <string name="posts_my_posts">My Posts</string>
+    <string name="posts_user_posts">%1$s Posts</string>
 
     <!-- Strings for account management -->
     <string name="account_management">Account Management</string>
@@ -114,28 +107,23 @@
     <string name="account_inactive">Status: Inactive</string>
     <string name="account_created">Created: %1$s</string>
     <string name="account_updated">Updated: %1$s</string>
-    <string name="edit_account">Edit Account</string>
-    <string name="email">Email</string>
-    <string name="nickname">Username</string>
-    <string name="nickname_requirements">3-20 characters</string>
-    <string name="new_password">New password</string>
-    <string name="password_optional">Leave empty if you dont want to change</string>
-    <string name="hide_password">Hide password</string>
-    <string name="show_password">Show password</string>
-    <string name="reset">Reset</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="back">Back</string>
-
-    <!-- Nowe zasoby dla dialogu edycji konta -->
-    <string name="edit_email">Edit email</string>
-    <string name="edit_nickname">Edit username</string>
-    <string name="change_password">Change password</string>
-    <string name="current_email">Current email</string>
-    <string name="current_nickname">Current username</string>
-    <string name="password_unchanged">Password will not be changed</string>
-    <string name="password_requirements">Enter a new password</string>
-    <string name="email_value">%1$s</string>
-    <string name="nickname_value">%1$s</string>
-    <string name="cancel">Cancel</string>
+    <string name="account_edit_account">Edit Account</string>
+    <string name="account_email">Email</string>
+    <string name="account_nickname">Username</string>
+    <string name="account_nickname_requirements">3–20 characters</string>
+    <string name="account_new_password">New password</string>
+    <string name="account_password_optional">Leave empty if you dont want to change</string>
+    <string name="account_hide_password">Hide password</string>
+    <string name="account_show_password">Show password</string>
+    <string name="account_save_changes">Save Changes</string>
+    <string name="account_edit_email">Edit email</string>
+    <string name="account_edit_nickname">Edit username</string>
+    <string name="account_change_password">Change password</string>
+    <string name="account_current_email">Current email</string>
+    <string name="account_current_nickname">Current username</string>
+    <string name="account_password_unchanged">Password will not be changed</string>
+    <string name="account_password_requirements">Enter a new password</string>
+    <string name="account_email_value">%1$s</string>
+    <string name="account_nickname_value">%1$s</string>
 </resources>
 
