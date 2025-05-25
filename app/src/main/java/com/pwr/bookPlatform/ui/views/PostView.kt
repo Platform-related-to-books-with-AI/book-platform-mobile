@@ -218,7 +218,7 @@ fun PostItem(post: Post) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = DateUtils.formatDateTime(post.createdAt),
+                    text = DateUtils.formatDateTime(post.updatedAt),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.secondary,
                     fontStyle = FontStyle.Italic

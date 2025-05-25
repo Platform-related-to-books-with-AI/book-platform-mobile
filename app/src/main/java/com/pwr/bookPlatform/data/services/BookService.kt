@@ -7,8 +7,8 @@ import com.pwr.bookPlatform.data.models.BookReview
 import com.pwr.bookPlatform.data.models.BookSearchResponse
 import com.pwr.bookPlatform.data.models.ReviewRequest
 import com.pwr.bookPlatform.data.models.ReviewResponse
-import com.pwr.bookPlatform.data.models.ReviewsResponse
 import com.pwr.bookPlatform.data.models.UpdateReviewRequest
+import com.pwr.bookPlatform.data.session.UserSession
 
 class BookService(
     private val bookApi: BookApi,
@@ -80,7 +80,7 @@ class BookService(
 
     suspend fun updateReview(reviewId: Long, rating: Float, status: String, isbn: String): Result<ReviewResponse> {
         return try {
-            val userId = com.pwr.bookPlatform.data.session.UserSession.user?.id ?: throw IllegalStateException("User not logged in")
+            val userId = UserSession.user?.id ?: throw IllegalStateException("User not logged in")
 
             val updateRequest = UpdateReviewRequest(isbn, rating, status, userId)
             val response = reviewApi.updateReview(reviewId, updateRequest)

@@ -27,6 +27,7 @@ import com.pwr.bookPlatform.R
 import com.pwr.bookPlatform.data.models.BookReview
 import com.pwr.bookPlatform.data.models.ReadingStatus
 import com.pwr.bookPlatform.ui.viewModels.BookshelfViewModel
+import com.pwr.bookPlatform.data.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -212,7 +213,7 @@ fun ReviewItem(
             )
 
             Text(
-                text = stringResource(R.string.bookshelf_created_at, bookReview.review.createdAt),
+                text = (DateUtils.formatDateTime(bookReview.review.updatedAt)),
                 fontSize = 12.sp,
                 color = Color.Gray
             )
