@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pwr.bookPlatform.R
 import com.pwr.bookPlatform.data.models.Post
 import com.pwr.bookPlatform.data.session.UserSession
@@ -134,7 +136,7 @@ fun PostView(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(postViewModel.posts) { post ->
-                    PostItem(post = post)
+                    PostItem(post = post, postViewModel = postViewModel)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -183,7 +185,7 @@ fun CreatePostDialog(
 }
 
 @Composable
-fun PostItem(post: Post) {
+fun PostItem(post: Post, postViewModel: PostViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,10 +228,10 @@ fun PostItem(post: Post) {
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { /* Implementacja polubienia */ }
+                    modifier = Modifier.clickable { postViewModel.toggleLike(post) }
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.FavoriteBorder,
+                        imageVector = if (post.likedByUser) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = stringResource(R.string.posts_likes, post.likes),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(36.dp)

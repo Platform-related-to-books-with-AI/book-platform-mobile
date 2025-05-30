@@ -22,7 +22,8 @@ object BookService {
         page: Int = 1
     ): Result<BookSearchResponse> {
         return try {
-            val response = bookApi.searchBooks(query, limit, sort, page)
+            val token = UserSession.token ?: return Result.failure(Exception("Not authenticated"))
+            val response = bookApi.searchBooks("Bearer $token", query, limit, sort, page)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
@@ -31,7 +32,8 @@ object BookService {
 
     suspend fun getBookDetails(workKey: String): Result<BookDetails> {
         return try {
-            val result = bookApi.getBookDetails(workKey)
+            val token = UserSession.token ?: return Result.failure(Exception("Not authenticated"))
+            val result = bookApi.getBookDetails("Bearer $token", workKey)
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
@@ -40,7 +42,8 @@ object BookService {
 
     suspend fun createReview(reviewRequest: ReviewRequest): Result<ReviewResponse> {
         return try {
-            val response = reviewApi.createReview(reviewRequest)
+            val token = UserSession.token ?: return Result.failure(Exception("Not authenticated"))
+            val response = reviewApi.createReview("Bearer $token", reviewRequest)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
@@ -49,7 +52,8 @@ object BookService {
 
     suspend fun deleteReview(id: Long): Result<Unit> {
         return try {
-            reviewApi.deleteReview(id)
+            val token = UserSession.token ?: return Result.failure(Exception("Not authenticated"))
+            reviewApi.deleteReview("Bearer $token", id)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -62,12 +66,13 @@ object BookService {
         perPage: Int = 10
     ): Result<List<BookReview>> {
         return try {
-            val reviewsResponse = reviewApi.getUserReviews(userId, page, perPage)
+            val token = UserSession.token ?: return Result.failure(Exception("Not authenticated"))
+            val reviewsResponse = reviewApi.getUserReviews("Bearer $token", userId, page, perPage)
             val bookReviews = mutableListOf<BookReview>()
 
             for (review in reviewsResponse.content) {
                 try {
-                    val bookDetails = bookApi.getBookDetails(review.isbn)
+                    val bookDetails = bookApi.getBookDetails("Bearer $token", review.isbn)
                     bookReviews.add(BookReview(review, bookDetails))
                 } catch (e: Exception) {
                 }
@@ -82,9 +87,10 @@ object BookService {
     suspend fun updateReview(reviewId: Long, rating: Float, status: String, isbn: String): Result<ReviewResponse> {
         return try {
             val userId = UserSession.user?.id ?: throw IllegalStateException("User not logged in")
+            val token = UserSession.token ?: return Result.failure(Exception("Not authenticated"))
 
             val updateRequest = UpdateReviewRequest(isbn, rating, status, userId)
-            val response = reviewApi.updateReview(reviewId, updateRequest)
+            val response = reviewApi.updateReview("Bearer $token", reviewId, updateRequest)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

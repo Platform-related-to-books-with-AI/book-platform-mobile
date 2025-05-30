@@ -38,5 +38,8 @@ object RetrofitInstance {
     val postApi: PostApi by lazy {
         retrofit.create(PostApi::class.java)
     }
-}
 
+    val likeApi: LikeApi by lazy {
+        retrofit.create(LikeApi::class.java)
+    }
+}

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pwr.bookPlatform.data.models.Post
 import com.pwr.bookPlatform.data.services.PostService
+import com.pwr.bookPlatform.data.services.LikeService
 import com.pwr.bookPlatform.data.session.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -88,5 +89,38 @@ class PostViewModel() : ViewModel() {
 
     fun clearSnackbarMessage() {
         snackbarMessage = null
+    }
+
+    fun toggleLike(post: Post) {
+        viewModelScope.launch {
+            snackbarMessage = null
+
+            LikeService.toggleLike(post.id).fold(
+                onSuccess = { response ->
+                    // Aktualizacja stanu posta w liście
+                    posts = posts.map {
+                        if (it.id == post.id) {
+                            it.copy(likes = response.likes, likedByUser = response.likedByUser)
+                        } else {
+                            it
+                        }
+                    }
+                },
+                onFailure = { exception ->
+                    snackbarMessage = when (exception) {
+                        is HttpException -> {
+                            when (exception.code()) {
+                                401 -> "Musisz być zalogowany, aby polubić post"
+                                403 -> "Brak uprawnień do wykonania tej akcji"
+                                404 -> "Post nie został znaleziony"
+                                409 -> "Konflikt - spróbuj ponownie później"
+                                else -> "Wystąpił błąd podczas przetwarzania żądania"
+                            }
+                        }
+                        else -> "Nie udało się połączyć z serwerem"
+                    }
+                }
+            )
+        }
     }
 }

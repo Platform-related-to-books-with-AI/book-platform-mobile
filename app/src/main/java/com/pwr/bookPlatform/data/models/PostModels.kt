@@ -1,11 +1,10 @@
 package com.pwr.bookPlatform.data.models
 
-import java.time.ZonedDateTime
-
 data class Post(
     val id: Long,
     val text: String,
     val likes: Int,
+    val likedByUser: Boolean,
     val createdAt: String,
     val updatedAt: String
 )
